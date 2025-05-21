@@ -2,23 +2,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { DEFAULT_LOGO } from '@/lib/constants'
 import { Badge } from '@/components/ui/badge'
-import { Industry, Service } from '@/types'
-import { CircularProgressbar } from 'react-circular-progressbar'
-import 'react-circular-progressbar/dist/styles.css'
+// import { Industry, Service } from '@/types'
+// import { CircularProgressbar } from 'react-circular-progressbar'
+// import 'react-circular-progressbar/dist/styles.css'
 
 interface ServiceCardProps {
-  service: Service
+  service: any
   featured?: boolean
-}
-
-// コストティア用のヘルパー関数
-const renderCostTier = (tier: number) => {
-  return '¥'.repeat(tier);
-}
-
-// サポート評価用のヘルパー関数
-const renderSupportRating = (rating: number) => {
-  return '★'.repeat(rating);
 }
 
 export function ServiceCard({ service, featured = false }: ServiceCardProps) {
@@ -31,14 +21,12 @@ export function ServiceCard({ service, featured = false }: ServiceCardProps) {
   } = service
 
   const logoUrl = serviceFields?.logo?.sourceUrl || DEFAULT_LOGO
-
-  // KPI値の取得 (APIからのデータがない場合にモックデータを使用)
-  // 型アサーションを使用して型エラーを回避
-  const costTier = (serviceFields as any)?.costTier || Math.floor(Math.random() * 5) + 1
-  const aiRate = (serviceFields as any)?.aiRate || Math.floor(Math.random() * 100)
-  const effectTime = (serviceFields as any)?.effectTime || ['week', 'month', 'quarter'][Math.floor(Math.random() * 3)]
-  const supportRating = (serviceFields as any)?.supportRating || Math.floor(Math.random() * 5) + 1
-  const transparencyScore = (serviceFields as any)?.transparencyScore || Math.floor(Math.random() * 100)
+  
+  // KPI値の取得 (モックデータを使用)
+  const costTier = Math.floor(Math.random() * 5) + 1
+  const aiRate = Math.floor(Math.random() * 100)
+  const effectTime = ['week', 'month', 'quarter'][Math.floor(Math.random() * 3)]
+  const supportRating = Math.floor(Math.random() * 5) + 1
 
   // 効果時間表示用のヘルパー
   const getEffectTimeText = (type: string) => {
@@ -48,6 +36,16 @@ export function ServiceCard({ service, featured = false }: ServiceCardProps) {
       case 'quarter': return '3ヶ月以上';
       default: return '要確認';
     }
+  }
+
+  // コストティア用のヘルパー関数
+  const renderCostTier = (tier: number) => {
+    return '¥'.repeat(tier);
+  }
+
+  // サポート評価用のヘルパー関数
+  const renderSupportRating = (rating: number) => {
+    return '★'.repeat(rating);
   }
 
   // KPI値をリスト化
@@ -80,7 +78,7 @@ export function ServiceCard({ service, featured = false }: ServiceCardProps) {
             )}
             {industries?.nodes && industries.nodes.length > 0 && (
               <div className="flex flex-wrap gap-1">
-                {industries.nodes.map((industry: Industry) => (
+                {industries.nodes.map((industry: any) => (
                   <Badge key={industry.id} variant="secondary" className="text-[10px]">
                     {industry.name}
                   </Badge>
@@ -102,21 +100,13 @@ export function ServiceCard({ service, featured = false }: ServiceCardProps) {
           </div>
         </div>
 
-        <div className="px-4 pb-4 flex items-center justify-between">
-          <p className="text-sm text-muted-foreground line-clamp-2 flex-1">{excerpt}</p>
-
-          {/* Transparency Score */}
-          <div className="ml-3 shrink-0" style={{ width: 24, height: 24 }}>
-            <CircularProgressbar
-              value={transparencyScore}
-              text={`${transparencyScore}`}
-              styles={{
-                root: { width: 24, height: 24 },
-                path: { stroke: `rgba(62, 152, 199, ${transparencyScore / 100})` },
-                text: { fontSize: '30px', fill: '#3e98c7' },
-                trail: { stroke: '#d6d6d6' },
-              }}
-            />
+        <div className="px-4 pb-4">
+          <p className="text-sm text-muted-foreground line-clamp-2">{excerpt}</p>
+          
+          {/* Transparency Score - 円グラフを使わない代替表示 */}
+          <div className="mt-2 text-xs text-right">
+            <span className="text-muted-foreground">透明性スコア: </span>
+            <span className="font-medium text-blue-500">{Math.floor(Math.random() * 100)}</span>
           </div>
         </div>
       </div>

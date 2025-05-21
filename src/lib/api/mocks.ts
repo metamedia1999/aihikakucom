@@ -1,4 +1,4 @@
-import { Industry, Service, Post } from '@/types';
+import { Industry, Service, Post, SearchResult } from '@/types';
 import { INDUSTRIES, MOCK_IMAGES } from '@/lib/constants';
 
 // モック業界データ
@@ -51,8 +51,8 @@ export const mockServices: Service[] = [
     },
     industries: {
       nodes: [
-        mockIndustries[0],
-        mockIndustries[2]
+        {...mockIndustries[0]},
+        {...mockIndustries[2]}
       ]
     }
   },
@@ -96,8 +96,8 @@ export const mockServices: Service[] = [
     },
     industries: {
       nodes: [
-        mockIndustries[0],
-        mockIndustries[1]
+        {...mockIndustries[0]},
+        {...mockIndustries[1]}
       ]
     }
   },
@@ -141,9 +141,9 @@ export const mockServices: Service[] = [
     },
     industries: {
       nodes: [
-        mockIndustries[0],
-        mockIndustries[1],
-        mockIndustries[2]
+        {...mockIndustries[0]},
+        {...mockIndustries[1]},
+        {...mockIndustries[2]}
       ]
     }
   },
@@ -187,7 +187,7 @@ export const mockServices: Service[] = [
     },
     industries: {
       nodes: [
-        mockIndustries[2]
+        {...mockIndustries[2]}
       ]
     }
   },
@@ -231,7 +231,7 @@ export const mockServices: Service[] = [
     },
     industries: {
       nodes: [
-        mockIndustries[1]
+        {...mockIndustries[1]}
       ]
     }
   },
@@ -275,7 +275,7 @@ export const mockServices: Service[] = [
     },
     industries: {
       nodes: [
-        mockIndustries[0]
+        {...mockIndustries[0]}
       ]
     }
   }
@@ -425,279 +425,101 @@ export const mockPosts: Post[] = [
         { id: 'cat-2', name: 'ビジネス活用', slug: 'business-use' }
       ]
     }
-  },
-  {
-    id: 'post-4',
-    slug: 'ai-ethics-business',
-    title: 'AIビジネス倫理：企業が考慮すべき5つの原則と実践方法',
-    excerpt: 'AIを事業に活用する際に考慮すべき倫理的問題と、適切に対応するための原則を解説します。',
-    content: `
-      <h2>AIビジネス倫理の重要性</h2>
-      <p>AI技術の普及に伴い、企業はAIの活用方法について倫理的な配慮を求められるようになっています。技術的な可能性だけでなく、社会的責任を考慮したAI活用が企業の長期的な成功につながります。</p>
-
-      <h3>AIビジネス倫理の5原則</h3>
-      <p>企業がAIを活用する際に考慮すべき5つの倫理原則は以下の通りです：</p>
-      <ol>
-        <li><strong>透明性</strong>：AIシステムの意思決定プロセスが理解可能であること</li>
-        <li><strong>公平性</strong>：バイアスを排除し、特定のグループを差別しないこと</li>
-        <li><strong>プライバシー</strong>：個人データの収集と利用に関する適切な取り扱い</li>
-        <li><strong>説明責任</strong>：AIシステムの判断に対する責任の所在の明確化</li>
-        <li><strong>人間中心</strong>：最終的な判断や決定権は人間が持つこと</li>
-      </ol>
-
-      <h3>原則を実践するための具体的ステップ</h3>
-      <p>これらの原則を実践するために、企業が取るべき具体的なアクションを紹介します：</p>
-
-      <h4>1. 透明性の確保</h4>
-      <ul>
-        <li>AIがどのようなデータを使用しているか明示する</li>
-        <li>可能な限りアルゴリズムの概要を公開する</li>
-        <li>AI判断の背後にある根拠を説明できるようにする</li>
-      </ul>
-
-      <h4>2. 公平性の担保</h4>
-      <ul>
-        <li>学習データにおけるバイアスを特定・軽減する</li>
-        <li>定期的な公平性監査を実施する</li>
-        <li>多様なバックグラウンドの視点を開発プロセスに含める</li>
-      </ul>
-
-      <h4>3. プライバシー保護</h4>
-      <ul>
-        <li>必要最小限のデータのみを収集する</li>
-        <li>データ匿名化技術を活用する</li>
-        <li>ユーザーにデータ利用の目的と範囲を明示する</li>
-      </ul>
-
-      <h4>4. 説明責任の明確化</h4>
-      <ul>
-        <li>AIシステムの限界を理解し、文書化する</li>
-        <li>AIの判断に対する異議申し立てプロセスを確立する</li>
-        <li>問題発生時の対応プランを事前に策定する</li>
-      </ul>
-
-      <h4>5. 人間中心の設計</h4>
-      <ul>
-        <li>重要な判断は最終的に人間が行う仕組みを構築する</li>
-        <li>AIと人間の適切な役割分担を明確にする</li>
-        <li>従業員のAIリテラシー向上を支援する</li>
-      </ul>
-
-      <h2>まとめ</h2>
-      <p>AIの倫理的活用は、単なる規制対応ではなく、持続可能なビジネスモデル構築の基盤となります。倫理的な配慮が行き届いたAIの導入により、ユーザーからの信頼獲得と長期的なビジネス成功を両立させることが可能になります。</p>
-    `,
-    date: '2025-03-28T10:15:00Z',
-    featuredImage: {
-      node: {
-        sourceUrl: MOCK_IMAGES.post4
-      }
-    },
-    categories: {
-      nodes: [
-        { id: 'cat-6', name: 'AI倫理', slug: 'ai-ethics' },
-        { id: 'cat-7', name: '企業責任', slug: 'corporate-responsibility' }
-      ]
-    }
-  },
-  {
-    id: 'post-5',
-    slug: 'financial-ai-case-study',
-    title: '金融業界におけるAI活用事例：リスク分析から顧客サービスまで',
-    excerpt: '金融機関がAIを活用して業務効率化とリスク管理、顧客体験向上を実現した具体的な事例を紹介します。',
-    content: `
-      <h2>金融業界を変革するAI技術</h2>
-      <p>金融業界ではAI技術の導入が進み、従来のビジネスモデルを大きく変革しています。本記事では、国内金融機関におけるAI活用の最新事例と、その成果について紹介します。</p>
-
-      <h3>リスク分析・管理におけるAI活用</h3>
-      <p>金融機関E銀行では、融資審査プロセスにAIを導入し、従来の信用スコアモデルでは捉えられなかった潜在的リスク要因の分析を実現しています。具体的には以下のような成果が報告されています：</p>
-      <ul>
-        <li>デフォルト予測精度が従来モデルと比較して25%向上</li>
-        <li>審査時間が平均2日から数時間に短縮</li>
-        <li>「薄いファイル問題」（信用履歴の少ない顧客）の改善</li>
-      </ul>
-      <p>また、F証券では、市場データと非構造化データ（ニュース、SNS）を組み合わせた異常検知AIにより、市場リスクの早期警告システムを構築。潜在的なリスクを平均1.5日早く検知できるようになりました。</p>
-
-      <h3>顧客サービス向上のためのAI活用</h3>
-      <p>地方銀行のG銀行では、AIチャットボットと対話型AIアシスタントを導入し、顧客サービスの質と効率を大幅に向上させています：</p>
-      <ul>
-        <li>24時間対応可能な金融アドバイスの提供</li>
-        <li>問い合わせ対応時間の70%削減</li>
-        <li>顧客満足度スコアの15%向上</li>
-        <li>個人に合わせた金融商品のレコメンデーション精度向上</li>
-      </ul>
-      <p>保険会社のHライフでは、保険金請求プロセスにAI画像認識と自然言語処理を導入し、書類確認と査定のプロセスを自動化。査定時間を平均5日から1日に短縮し、顧客満足度を大幅に向上させています。</p>
-
-      <h3>不正検知における革新的アプローチ</h3>
-      <p>カード会社のIクレジットでは、リアルタイム不正検知AIを導入し、以下のような成果を上げています：</p>
-      <ul>
-        <li>不正検知率が従来システムと比較して35%向上</li>
-        <li>誤検知（正常取引を不正と判断）が40%減少</li>
-        <li>新たな不正パターンの自動学習による対応力向上</li>
-      </ul>
-      <p>この結果、年間数億円の不正被害防止と、顧客体験の向上を同時に実現しています。</p>
-
-      <h3>導入における課題と解決策</h3>
-      <p>金融機関がAIを導入する際には、以下のような課題があります：</p>
-      <ul>
-        <li>レガシーシステムとの統合</li>
-        <li>規制遵守と説明可能性の確保</li>
-        <li>高度なセキュリティ要件への対応</li>
-        <li>従業員のスキルギャップ</li>
-      </ul>
-      <p>これらの課題に対して、段階的導入アプローチやAPI連携の活用、継続的なコンプライアンスチェック体制の構築などで対応している事例が見られます。</p>
-
-      <h2>まとめ</h2>
-      <p>金融業界におけるAI活用は、リスク管理の精度向上から顧客体験の改善まで、幅広い価値をもたらしています。今後は、レガシーシステムとの統合や規制対応といった課題を解決しながら、さらに高度な活用が進むと予想されます。</p>
-    `,
-    date: '2025-03-20T16:30:00Z',
-    featuredImage: {
-      node: {
-        sourceUrl: MOCK_IMAGES.post5
-      }
-    },
-    categories: {
-      nodes: [
-        { id: 'cat-8', name: '金融', slug: 'finance' },
-        { id: 'cat-9', name: '事例紹介', slug: 'case-study' }
-      ]
-    }
-  },
-  {
-    id: 'post-6',
-    slug: 'manufacturing-ai-automation',
-    title: '製造業におけるAI自動化の最前線：生産性と品質の両立事例',
-    excerpt: '製造業がAIを活用して生産性向上と品質管理を同時に実現した成功事例と導入ステップを解説します。',
-    content: `
-      <h2>製造業を革新するAI技術</h2>
-      <p>製造業では、AIと自動化技術の組み合わせにより、生産性向上と品質向上の両立を実現する企業が増えています。本記事では、国内製造業のAI活用事例と、その導入プロセスについて紹介します。</p>
-
-      <h3>予知保全によるダウンタイム削減</h3>
-      <p>自動車部品メーカーのJ社では、工場内の設備にIoTセンサーを設置し、AIによる予知保全システムを導入しました。センサーデータから機械の異常を事前に検知することで、以下の成果を実現しています：</p>
-      <ul>
-        <li>計画外のダウンタイムを65%削減</li>
-        <li>保全コストを年間約3,000万円削減</li>
-        <li>部品の寿命予測精度向上による在庫最適化</li>
-      </ul>
-      <p>導入の際には、まず一部のクリティカルな設備に限定したパイロット導入から始め、効果が確認できた後に全工程へ展開するアプローチを取っています。</p>
-
-      <h3>品質検査の自動化</h3>
-      <p>電子部品メーカーのK社では、製造ラインの最終検査工程にAI画像認識システムを導入し、以下の効果を得ています：</p>
-      <ul>
-        <li>人間の目では検出困難な微細な欠陥の検出率80%向上</li>
-        <li>検査工程のスループット35%向上</li>
-        <li>品質検査員の業務が高度な判断業務にシフト</li>
-        <li>品質データの蓄積による製造プロセス改善</li>
-      </ul>
-      <p>このシステム導入により、人件費削減だけでなく、製品不良の市場流出防止によるリコールリスク低減という副次効果も得ています。</p>
-
-      <h3>生産計画の最適化</h3>
-      <p>食品メーカーのL社では、需要予測AIと生産スケジューリングAIを組み合わせた生産計画最適化システムを導入し、以下の成果を上げています：</p>
-      <ul>
-        <li>生産ラインの稼働率を平均15%向上</li>
-        <li>原材料廃棄ロスを23%削減</li>
-        <li>納期遵守率の向上（92%→98%）</li>
-        <li>急な受注変更への柔軟な対応が可能に</li>
-      </ul>
-      <p>これにより、コスト削減と顧客満足度向上を同時に実現しています。</p>
-
-      <h3>現場作業者の支援</h3>
-      <p>精密機器メーカーのM社では、作業指示とエラー防止のためのAIアシスタントを導入しました：</p>
-      <ul>
-        <li>拡張現実（AR）ゴーグルによる作業指示表示</li>
-        <li>音声認識による両手作業中のシステム操作</li>
-        <li>作業エラーのリアルタイム検知と警告</li>
-        <li>新人作業者の習熟期間を40%短縮</li>
-      </ul>
-      <p>熟練工の暗黙知をAIに取り込むことで、技能伝承の課題解決にも貢献しています。</p>
-
-      <h3>導入のステップとポイント</h3>
-      <p>製造業でAIを効果的に導入するためのステップは以下の通りです：</p>
-      <ol>
-        <li>現状の課題と改善効果の定量化</li>
-        <li>必要なデータの特定と収集体制の構築</li>
-        <li>小規模な実証実験（PoC）の実施</li>
-        <li>現場作業者を含めた評価と改善</li>
-        <li>本格展開と継続的な改善サイクルの確立</li>
-      </ol>
-      <p>特に重要なのは、AIシステムの導入を単なるIT投資ではなく、現場改善活動の一環として位置づけることです。現場作業者の理解と協力を得るプロセスが成功の鍵となります。</p>
-
-      <h2>まとめ</h2>
-      <p>製造業におけるAI活用は、生産性向上、品質向上、コスト削減など多くのメリットをもたらします。課題を明確にし、段階的なアプローチで導入を進めることで、中小製造業でも大きな効果を得ることが可能です。</p>
-    `,
-    date: '2025-03-15T09:45:00Z',
-    featuredImage: {
-      node: {
-        sourceUrl: MOCK_IMAGES.post6
-      }
-    },
-    categories: {
-      nodes: [
-        { id: 'cat-10', name: '製造業', slug: 'manufacturing' },
-        { id: 'cat-9', name: '事例紹介', slug: 'case-study' }
-      ]
-    }
   }
 ];
 
-// ホームページデータ生成関数
+// モックデータ取得関数
 export function getMockHomeData() {
+  console.log('getMockHomeData called');
+  
+  // 安全なディープコピーを作成
+  const safeServices = mockServices.map(service => {
+    // 各サービスのディープコピーを作成
+    const serviceCopy = JSON.parse(JSON.stringify(service));
+    
+    // industries.nodesが存在する場合、各industryのディープコピーを作成
+    if (serviceCopy.industries && Array.isArray(serviceCopy.industries.nodes)) {
+      serviceCopy.industries.nodes = serviceCopy.industries.nodes.map(industry => {
+        return { ...industry };
+      });
+    }
+    
+    return serviceCopy;
+  });
+  
+  console.log(`getMockHomeData returning ${safeServices.length} services`);
+  
   return {
-    services: mockServices,
-    posts: mockPosts,
-    industries: mockIndustries,
+    services: safeServices,
+    posts: JSON.parse(JSON.stringify(mockPosts)),
+    industries: JSON.parse(JSON.stringify(mockIndustries))
   };
 }
 
-// 業界ページデータ生成関数
 export function getMockIndustryData(slug: string) {
+  console.log(`getMockIndustryData called for slug: ${slug}`);
+  
   const industry = mockIndustries.find(i => i.slug === slug);
-  if (!industry) throw new Error('Industry not found');
+  if (!industry) {
+    throw new Error(`Industry with slug ${slug} not found`);
+  }
 
-  const services = mockServices.filter(service =>
+  const industryServices = mockServices.filter(service => 
     service.industries?.nodes.some(i => i.slug === slug)
   );
 
   return {
-    industry,
-    services,
+    industry: JSON.parse(JSON.stringify(industry)),
+    services: JSON.parse(JSON.stringify(industryServices))
   };
 }
 
-// サービスデータ生成関数
 export function getMockServiceData(slug: string) {
+  console.log(`getMockServiceData called for slug: ${slug}`);
+  
   const service = mockServices.find(s => s.slug === slug);
-  if (!service) throw new Error('Service not found');
-
-  return service;
+  if (!service) {
+    throw new Error(`Service with slug ${slug} not found`);
+  }
+  
+  // オブジェクトのディープコピーを返す
+  return JSON.parse(JSON.stringify(service));
 }
 
-// ブログ記事データ生成関数
 export function getMockPostData(slug: string) {
+  console.log(`getMockPostData called for slug: ${slug}`);
+  
   const post = mockPosts.find(p => p.slug === slug);
-  if (!post) throw new Error('Post not found');
-
-  return post;
+  if (!post) {
+    throw new Error(`Post with slug ${slug} not found`);
+  }
+  
+  // オブジェクトのディープコピーを返す
+  return JSON.parse(JSON.stringify(post));
 }
 
-// 検索機能
-export function mockSearchContent(searchTerm: string) {
-  // 簡易的な検索ロジック（実際には自然言語処理などでより高度な検索を行うことが多い）
+export function mockSearchContent(searchTerm: string): SearchResult {
+  console.log(`mockSearchContent called with term: ${searchTerm}`);
+  
+  // 検索語を小文字に変換して部分一致検索
   const term = searchTerm.toLowerCase();
-
-  const services = mockServices.filter(service =>
-    service.title.toLowerCase().includes(term) ||
+  
+  const filteredServices = mockServices.filter(service => 
+    service.title.toLowerCase().includes(term) || 
     service.excerpt.toLowerCase().includes(term) ||
-    service.content.toLowerCase().includes(term)
+    service.content.toLowerCase().includes(term) ||
+    service.industries?.nodes.some(i => i.name.toLowerCase().includes(term))
   );
-
-  const posts = mockPosts.filter(post =>
-    post.title.toLowerCase().includes(term) ||
+  
+  const filteredPosts = mockPosts.filter(post => 
+    post.title.toLowerCase().includes(term) || 
     post.excerpt.toLowerCase().includes(term) ||
-    post.content.toLowerCase().includes(term)
+    post.content.toLowerCase().includes(term) ||
+    post.categories?.nodes.some(c => c.name.toLowerCase().includes(term))
   );
-
+  
   return {
-    services,
-    posts,
+    services: JSON.parse(JSON.stringify(filteredServices)),
+    posts: JSON.parse(JSON.stringify(filteredPosts))
   };
 }
