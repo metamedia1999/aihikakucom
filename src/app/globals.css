@@ -1,0 +1,178 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "palt" 1;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+}
+
+@layer components {
+  .container-wide {
+    @apply container max-w-7xl mx-auto px-4 sm:px-6;
+  }
+
+  .hero-search {
+    @apply relative w-full max-w-3xl mx-auto rounded-full overflow-hidden shadow-lg transition-all duration-300;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .hero-search:hover {
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0.1), 0 8px 24px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .hero-search-input {
+    @apply h-16 pl-6 pr-16 text-lg w-full border-none focus-visible:ring-0 focus-visible:ring-offset-0 transition-all duration-300;
+  }
+
+  .hero-search-button {
+    @apply absolute right-4 top-1/2 -translate-y-1/2 bg-primary text-primary-foreground rounded-full h-10 w-10 flex items-center justify-center hover:bg-primary/90 transition-colors;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .hero-search-button:hover:not(:disabled) {
+    transform: translateY(-50%) scale(1.05);
+  }
+
+  .hero-search-button:active:not(:disabled) {
+    transform: translateY(-50%) scale(0.95);
+  }
+
+  .issue-card {
+    @apply flex flex-col items-center p-6 bg-white border rounded-lg shadow-sm transition-all cursor-pointer hover:shadow-md hover:border-primary/20;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .issue-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .issue-icon {
+    @apply text-4xl mb-4;
+  }
+
+  .service-card {
+    @apply bg-white border rounded-lg overflow-hidden transition-all hover:shadow-lg hover:border-primary/20;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .service-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:border-primary/20;
+  }
+
+  .star-rating {
+    @apply flex items-center text-amber-500;
+  }
+}
+
+@layer utilities {
+  /* スクロールバーを非表示にする */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;             /* Chrome, Safari and Opera */
+  }
+
+  /* スクロールスナップ */
+  .snap-x {
+    scroll-snap-type: x mandatory;
+  }
+  .snap-start {
+    scroll-snap-align: start;
+  }
+  .snap-center {
+    scroll-snap-align: center;
+  }
+}
+
+/* 日本語フォント設定 */
+html {
+  font-family: 'Noto Sans JP', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* コンテンツスタイル */
+.content h2 {
+  @apply text-2xl mt-8 mb-4;
+}
+
+.content h3 {
+  @apply text-xl mt-6 mb-3;
+}
+
+.content p {
+  @apply mb-4 leading-relaxed;
+}
+
+.content ul {
+  @apply list-disc pl-5 mb-4;
+}
+
+.content ol {
+  @apply list-decimal pl-5 mb-4;
+}
+
+.content a {
+  @apply text-primary hover:underline;
+}
