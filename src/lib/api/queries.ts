@@ -260,7 +260,7 @@
 //   }
 // `
 
-import { gql } from 'graphql-request'
+// import { gql } from 'graphql-request'
 
 // =============================
 // WordPress ↔︎ WPGraphQL の実際のスキーマ名に合わせる
