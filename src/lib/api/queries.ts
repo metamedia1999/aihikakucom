@@ -338,15 +338,93 @@ import { gql } from 'graphql-request'
 //   }
 // `
 
+// import { gql } from 'graphql-request'
+
+// // =============================
+// // WordPress ↔︎ WPGraphQL の実際のスキーマ名に合わせる
+// //   - CPT 名が `Service` → allService / service
+// //   - ACF の Group 名が `serviceDetail`
+// // =============================
+
+// // 2-1 ▶ ホームページ（一覧）
+// export const GET_HOME_DATA = gql`
+//   query GetHomeData {
+//     allService(first: 12) {
+//       nodes {
+//         id
+//         slug
+//         title
+//         excerpt
+//         featuredImage {
+//           node {
+//             sourceUrl
+//           }
+//         }
+//         serviceDetail {
+//           price
+//           serviceSummary
+//           logo {
+//             sourceUrl
+//           }
+//         }
+//         industries {
+//           nodes {
+//             id
+//             slug
+//             name
+//           }
+//         }
+//       }
+//     }
+//   }
+// `
+
+// // 2-2 ▶ サービス詳細ページ
+// export const GET_SERVICE_DATA = gql`
+//   query GetServiceData($slug: ID!) {
+//     service(id: $slug, idType: SLUG) {
+//       id
+//       slug
+//       title
+//       excerpt
+//       content
+//       featuredImage {
+//         node {
+//           sourceUrl
+//         }
+//       }
+//       serviceDetail {
+//         price
+//         serviceSummary
+//         aiUtilization
+//         effectiveness
+//         supportLevel
+//         industryCategory
+//         transparencyScore
+//         logo {
+//           sourceUrl
+//         }
+//       }
+//       industries {
+//         nodes {
+//           id
+//           slug
+//           name
+//         }
+//       }
+//     }
+//   }
+// `
+
 import { gql } from 'graphql-request'
 
 // =============================
-// WordPress ↔︎ WPGraphQL の実際のスキーマ名に合わせる
+// WordPress ↔︎ WPGraphQL のスキーマに合わせる
 //   - CPT 名が `Service` → allService / service
 //   - ACF の Group 名が `serviceDetail`
 // =============================
 
-// 2-1 ▶ ホームページ（一覧）
+// ホームページ用クエリ
 export const GET_HOME_DATA = gql`
   query GetHomeData {
     allService(first: 12) {
@@ -354,7 +432,6 @@ export const GET_HOME_DATA = gql`
         id
         slug
         title
-        excerpt
         featuredImage {
           node {
             sourceUrl
@@ -379,14 +456,13 @@ export const GET_HOME_DATA = gql`
   }
 `
 
-// 2-2 ▶ サービス詳細ページ
+// サービス詳細ページ用クエリ
 export const GET_SERVICE_DATA = gql`
   query GetServiceData($slug: ID!) {
     service(id: $slug, idType: SLUG) {
       id
       slug
       title
-      excerpt
       content
       featuredImage {
         node {
