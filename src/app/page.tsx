@@ -197,6 +197,43 @@
 //     );
 //   }
 // }
+// import { Metadata } from 'next'
+// import { SITE_NAME } from '@/lib/constants'
+// import { getHomeServices } from '@/lib/api/fetchers'
+// import { ServiceCard } from '@/components/cards/service-card'
+// import { HeroSection } from '@/components/sections/hero-section'
+
+// export const metadata: Metadata = {
+//   title: SITE_NAME,
+//   description: '中小企業向け AIBPO サービスを比較できるプラットフォーム',
+// }
+
+// export const revalidate = 600 // ISR
+
+// export default async function HomePage() {
+//   const services = await getHomeServices()
+
+//   return (
+//     <>
+//       <HeroSection />
+
+//       <section className="container-wide py-16">
+//         <h2 className="text-3xl font-bold mb-8 text-center">最新 AI サービス一覧</h2>
+
+//         {services.length === 0 ? (
+//           <p className="text-center text-muted-foreground">サービス記事がまだありません。</p>
+//         ) : (
+//           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+//             {services.map((svc) => (
+//               <ServiceCard key={svc.id} service={svc as any} />
+//             ))}
+//           </div>
+//         )}
+//       </section>
+//     </>
+//   )
+// }
+
 import { Metadata } from 'next'
 import { SITE_NAME } from '@/lib/constants'
 import { getHomeServices } from '@/lib/api/fetchers'
@@ -208,7 +245,7 @@ export const metadata: Metadata = {
   description: '中小企業向け AIBPO サービスを比較できるプラットフォーム',
 }
 
-export const revalidate = 600 // ISR
+export const revalidate = 600 // ISR 10 分
 
 export default async function HomePage() {
   const services = await getHomeServices()

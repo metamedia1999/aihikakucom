@@ -132,6 +132,22 @@
 //   return data.service
 // }
 
+// import { fetchGraphQL } from './graphql-client'
+// import { GET_HOME_DATA, GET_SERVICE_DATA } from './queries'
+// import type { Service } from '@/types'
+
+// // ホームページ：サービス一覧
+// export async function getHomeServices(): Promise<Service[]> {
+//   const data = await fetchGraphQL<{ allService: { nodes: Service[] } }>(GET_HOME_DATA)
+//   return data.allService.nodes
+// }
+
+// // サービス詳細
+// export async function getServiceData(slug: string): Promise<Service> {
+//   const data = await fetchGraphQL<{ service: Service }>(GET_SERVICE_DATA, { slug })
+//   return data.service
+// }
+
 import { fetchGraphQL } from './graphql-client'
 import { GET_HOME_DATA, GET_SERVICE_DATA } from './queries'
 import type { Service } from '@/types'
