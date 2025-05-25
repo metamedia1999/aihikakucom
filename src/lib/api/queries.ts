@@ -508,6 +508,8 @@ export const GET_HOME_DATA = gql`
         id
         slug
         title
+        excerpt
+        content
         featuredImage {
           node {
             sourceUrl
@@ -531,6 +533,36 @@ export const GET_HOME_DATA = gql`
         }
       }
     }
+    posts(first: 10) {
+      nodes {
+        id
+        slug
+        title
+        excerpt
+        content
+        date
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
+        categories {
+          nodes {
+            id
+            name
+            slug
+          }
+        }
+      }
+    }
+    categories(where: { hideEmpty: true }) {
+      nodes {
+        id
+        slug
+        name
+        description
+      }
+    }
   }
 `
 
@@ -541,6 +573,7 @@ export const GET_SERVICE_DATA = gql`
       id
       slug
       title
+      excerpt
       content
       featuredImage {
         node {
@@ -571,4 +604,129 @@ export const GET_SERVICE_DATA = gql`
     }
   }
 `
-//test
+
+// ブログ記事詳細ページ用クエリ
+export const GET_POST_DATA = gql`
+  query GetPostData($slug: ID!) {
+    post(id: $slug, idType: SLUG) {
+      id
+      slug
+      title
+      excerpt
+      content
+      date
+      featuredImage {
+        node {
+          sourceUrl
+        }
+      }
+      categories {
+        nodes {
+          id
+          name
+          slug
+        }
+      }
+    }
+  }
+`
+
+// 検索用クエリ
+export const SEARCH_QUERY = gql`
+  query SearchContent($searchTerm: String!) {
+    services: allService(where: { search: $searchTerm }, first: 20) {
+      nodes {
+        id
+        slug
+        title
+        excerpt
+        content
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
+        serviceDetail {
+          price
+          serviceSummary
+          logo {
+            node {
+              sourceUrl
+            }
+          }
+        }
+        industries {
+          nodes {
+            id
+            slug
+            name
+          }
+        }
+      }
+    }
+    posts(where: { search: $searchTerm }, first: 20) {
+      nodes {
+        id
+        slug
+        title
+        excerpt
+        content
+        date
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
+        categories {
+          nodes {
+            id
+            name
+            slug
+          }
+        }
+      }
+    }
+  }
+`
+
+// 業界ページ用クエリ
+export const GET_INDUSTRY_DATA = gql`
+  query GetIndustryData($slug: ID!) {
+    category(id: $slug, idType: SLUG) {
+      id
+      slug
+      name
+      description
+      posts {
+        nodes {
+          id
+          slug
+          title
+          excerpt
+          content
+          featuredImage {
+            node {
+              sourceUrl
+            }
+          }
+          serviceDetail {
+            price
+            serviceSummary
+            logo {
+              node {
+                sourceUrl
+              }
+            }
+          }
+          industries {
+            nodes {
+              id
+              slug
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+`

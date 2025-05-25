@@ -37,6 +37,20 @@ export const mockServices: Service[] = [
         <li>担当者の業務負荷軽減</li>
       </ul>
     `,
+    serviceDetail: {
+      price: '月額50,000円〜（利用規模により変動）',
+      serviceSummary: 'あらゆるビジネスシーンで活躍する自然言語処理AIアシスタント。問い合わせ対応や定型業務を自動化し、業務効率化を実現します。',
+      aiUtilization: '90',
+      effectiveness: '85',
+      supportLevel: '95',
+      industryCategory: 'general',
+      transparencyScore: '88',
+      logo: {
+        node: {
+          sourceUrl: MOCK_IMAGES.service1
+        }
+      }
+    },
     serviceFields: {
       price: '月額50,000円〜（利用規模により変動）',
       summary: 'あらゆるビジネスシーンで活躍する自然言語処理AIアシスタント。問い合わせ対応や定型業務を自動化し、業務効率化を実現します。',
@@ -82,6 +96,20 @@ export const mockServices: Service[] = [
         <li>業務プロセスの最適化</li>
       </ul>
     `,
+    serviceDetail: {
+      price: '初期費用200,000円 + 月額100,000円〜',
+      serviceSummary: '大量のデータから意味のあるパターンを発見し、ビジネスの意思決定を支援するAI分析ツール。直感的なダッシュボードでデータを可視化します。',
+      aiUtilization: '88',
+      effectiveness: '92',
+      supportLevel: '85',
+      industryCategory: 'data',
+      transparencyScore: '90',
+      logo: {
+        node: {
+          sourceUrl: MOCK_IMAGES.service2
+        }
+      }
+    },
     serviceFields: {
       price: '初期費用200,000円 + 月額100,000円〜',
       summary: '大量のデータから意味のあるパターンを発見し、ビジネスの意思決定を支援するAI分析ツール。直感的なダッシュボードでデータを可視化します。',
@@ -217,6 +245,20 @@ export const mockServices: Service[] = [
         <li>研究者の洞察支援</li>
       </ul>
     `,
+    serviceDetail: {
+      price: '要お問い合わせ（利用規模や機能により異なります）',
+      serviceSummary: '創薬研究に特化したAIプラットフォーム。膨大な医学情報から新たな治療ターゲットや化合物候補を発見し、医薬品開発プロセスを加速します。',
+      aiUtilization: '95',
+      effectiveness: '90',
+      supportLevel: '85',
+      industryCategory: 'pharma',
+      transparencyScore: '80',
+      logo: {
+        node: {
+          sourceUrl: MOCK_IMAGES.service5
+        }
+      }
+    },
     serviceFields: {
       price: '要お問い合わせ（利用規模や機能により異なります）',
       summary: '創薬研究に特化したAIプラットフォーム。膨大な医学情報から新たな治療ターゲットや化合物候補を発見し、医薬品開発プロセスを加速します。',
@@ -261,6 +303,20 @@ export const mockServices: Service[] = [
         <li>ポートフォリオのリバランス判断</li>
       </ul>
     `,
+    serviceDetail: {
+      price: '月額150,000円〜（オプション機能により変動）',
+      serviceSummary: '金融市場データと経済ニュースを分析し、市場動向を予測するAIソリューション。投資判断の意思決定とリスク管理を支援します。',
+      aiUtilization: '85',
+      effectiveness: '88',
+      supportLevel: '92',
+      industryCategory: 'finance',
+      transparencyScore: '85',
+      logo: {
+        node: {
+          sourceUrl: MOCK_IMAGES.service6
+        }
+      }
+    },
     serviceFields: {
       price: '月額150,000円〜（オプション機能により変動）',
       summary: '金融市場データと経済ニュースを分析し、市場動向を予測するAIソリューション。投資判断の意思決定とリスク管理を支援します。',

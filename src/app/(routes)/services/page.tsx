@@ -1,9 +1,10 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { SITE_NAME, MOCK_IMAGES } from '@/lib/constants'
+import { SITE_NAME } from '@/lib/constants'
 import { ServiceCard } from '@/components/cards/service-card'
 import { SearchBarLive } from '@/components/search/search-bar-live'
 import { StickyFilterBar } from '@/components/filter/sticky-filter-bar'
+import { getServices } from '@/lib/api/fetchers'
 
 export const metadata: Metadata = {
   title: `サービス一覧 | ${SITE_NAME}`,
@@ -13,192 +14,10 @@ export const metadata: Metadata = {
 // 10分間隔でページを再生成
 export const revalidate = 600
 
-// モックサービスデータ（直接定義）
-const mockServices = [
-  {
-    id: 'service-1',
-    slug: 'ai-assistant-pro',
-    title: 'AI Assistant Pro',
-    excerpt: 'あらゆるビジネスシーンで活躍する多機能AIアシスタント。自然言語処理により、問い合わせ対応や定型業務を自動化します。',
-    content: '<p>AI Assistant Proの詳細説明</p>',
-    serviceFields: {
-      price: '月額50,000円〜',
-      summary: 'あらゆるビジネスシーンで活躍するAIアシスタント。',
-      logo: {
-        sourceUrl: MOCK_IMAGES.service1
-      }
-    },
-    featuredImage: {
-      node: {
-        sourceUrl: MOCK_IMAGES.service1
-      }
-    },
-    industries: {
-      nodes: [
-        {
-          id: 'industry-1',
-          name: '金融',
-          slug: 'finance'
-        },
-        {
-          id: 'industry-2',
-          name: '製造',
-          slug: 'manufacturing'
-        }
-      ]
-    }
-  },
-  {
-    id: 'service-2',
-    slug: 'smart-data-analyzer',
-    title: 'Smart Data Analyzer',
-    excerpt: '大量のデータから有益な洞察を抽出するAI分析ツール。ビジネスの意思決定を支援します。',
-    content: '<p>Smart Data Analyzerの詳細説明</p>',
-    serviceFields: {
-      price: '初期費用200,000円 + 月額100,000円〜',
-      summary: '大量のデータから意味のあるパターンを発見し、ビジネスの意思決定を支援するAI分析ツール。',
-      logo: {
-        sourceUrl: MOCK_IMAGES.service2
-      }
-    },
-    featuredImage: {
-      node: {
-        sourceUrl: MOCK_IMAGES.service2
-      }
-    },
-    industries: {
-      nodes: [
-        {
-          id: 'industry-1',
-          name: '金融',
-          slug: 'finance'
-        },
-        {
-          id: 'industry-3',
-          name: '製薬',
-          slug: 'pharma'
-        }
-      ]
-    }
-  },
-  {
-    id: 'service-3',
-    slug: 'ai-document-processor',
-    title: 'AI Document Processor',
-    excerpt: '書類の自動認識・データ抽出を行うAIソリューション。紙の書類からデジタルデータへの変換を効率化します。',
-    content: '<p>AI Document Processorの詳細説明</p>',
-    serviceFields: {
-      price: 'ドキュメント処理量に応じた従量課金制',
-      summary: '書類やPDFから必要なデータを自動抽出するAIソリューション。',
-      logo: {
-        sourceUrl: MOCK_IMAGES.service3
-      }
-    },
-    featuredImage: {
-      node: {
-        sourceUrl: MOCK_IMAGES.service3
-      }
-    },
-    industries: {
-      nodes: [
-        {
-          id: 'industry-2',
-          name: '製造',
-          slug: 'manufacturing'
-        }
-      ]
-    }
-  },
-  {
-    id: 'service-4',
-    slug: 'ai-quality-inspector',
-    title: 'AI Quality Inspector',
-    excerpt: '製造ラインの品質検査を自動化するAIソリューション。画像認識技術により不良品を高精度で検出します。',
-    content: '<p>AI Quality Inspectorの詳細説明</p>',
-    serviceFields: {
-      price: '初期費用300,000円 + 月額150,000円〜',
-      summary: '製造ラインの品質検査を自動化するAIソリューション。',
-      logo: {
-        sourceUrl: MOCK_IMAGES.service4
-      }
-    },
-    featuredImage: {
-      node: {
-        sourceUrl: MOCK_IMAGES.service4
-      }
-    },
-    industries: {
-      nodes: [
-        {
-          id: 'industry-2',
-          name: '製造',
-          slug: 'manufacturing'
-        }
-      ]
-    }
-  },
-  {
-    id: 'service-5',
-    slug: 'pharma-research-ai',
-    title: 'Pharma Research AI',
-    excerpt: '創薬研究を加速するAIソリューション。膨大な研究データから新たな知見を発見し、研究開発を効率化します。',
-    content: '<p>Pharma Research AIの詳細説明</p>',
-    serviceFields: {
-      price: '要問合せ',
-      summary: '創薬研究を加速するAIソリューション。',
-      logo: {
-        sourceUrl: MOCK_IMAGES.service5
-      }
-    },
-    featuredImage: {
-      node: {
-        sourceUrl: MOCK_IMAGES.service5
-      }
-    },
-    industries: {
-      nodes: [
-        {
-          id: 'industry-3',
-          name: '製薬',
-          slug: 'pharma'
-        }
-      ]
-    }
-  },
-  {
-    id: 'service-6',
-    slug: 'finance-predict-ai',
-    title: 'Finance Predict AI',
-    excerpt: '金融市場の予測分析を行うAIソリューション。過去のデータから将来のトレンドを予測し、投資判断を支援します。',
-    content: '<p>Finance Predict AIの詳細説明</p>',
-    serviceFields: {
-      price: '月額200,000円〜',
-      summary: '金融市場の予測分析を行うAIソリューション。',
-      logo: {
-        sourceUrl: MOCK_IMAGES.service6
-      }
-    },
-    featuredImage: {
-      node: {
-        sourceUrl: MOCK_IMAGES.service6
-      }
-    },
-    industries: {
-      nodes: [
-        {
-          id: 'industry-1',
-          name: '金融',
-          slug: 'finance'
-        }
-      ]
-    }
-  }
-];
-
-export default function ServicesPage() {
+export default async function ServicesPage() {
   try {
-    // モックサービスデータを使用
-    const services = mockServices;
+    // 新しいデータフェッチャーを使用
+    const services = await getServices()
 
     return (
       <>
@@ -221,17 +40,50 @@ export default function ServicesPage() {
 
           {/* サービス一覧 */}
           {services && services.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {services.map((service) => (
-                <ServiceCard key={service.id} service={service as any} />
-              ))}
-            </div>
+            <>
+              <div className="mb-6">
+                <p className="text-muted-foreground">
+                  {services.length}件のAIサービスが見つかりました
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {services.map((service) => (
+                  <ServiceCard key={service.id} service={service} />
+                ))}
+              </div>
+            </>
           ) : (
             <div className="text-center py-12">
-              <p className="text-muted-foreground">
-                現在、掲載されているサービスはありません。<br />
-                後ほどお試しください。
-              </p>
+              <div className="max-w-md mx-auto">
+                <h2 className="text-xl font-semibold mb-4">サービスを読み込み中</h2>
+                <p className="text-muted-foreground mb-6">
+                  AIサービスの情報を取得しています。<br />
+                  しばらくお待ちください。
+                </p>
+                
+                {/* 基本的なサービス情報を表示 */}
+                <div className="space-y-4">
+                  <div className="p-4 border rounded-lg text-left">
+                    <h3 className="font-medium">AI Assistant Pro</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      月額50,000円〜 | 業務自動化・効率化
+                    </p>
+                  </div>
+                  <div className="p-4 border rounded-lg text-left">
+                    <h3 className="font-medium">Smart Data Analyzer</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      月額100,000円〜 | データ分析・予測
+                    </p>
+                  </div>
+                  <div className="p-4 border rounded-lg text-left">
+                    <h3 className="font-medium">AI Document Processor</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      従量課金制 | 文書処理・データ抽出
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -255,12 +107,42 @@ export default function ServicesPage() {
   } catch (error) {
     console.error('Failed to load services page:', error);
     return (
-      <div className="container-wide py-12 text-center">
-        <h1 className="text-3xl font-bold mb-4">エラーが発生しました</h1>
-        <p className="text-muted-foreground">
-          ページの読み込み中にエラーが発生しました。<br />
-          しばらく経ってからもう一度お試しください。
-        </p>
+      <div className="container-wide py-12">
+        <div className="max-w-2xl mx-auto text-center">
+          <h1 className="text-3xl font-bold mb-4">サービス一覧</h1>
+          <div className="bg-secondary/50 rounded-lg p-8">
+            <h2 className="text-xl font-semibold mb-4">サービス情報を準備中</h2>
+            <p className="text-muted-foreground mb-8">
+              AIサービスの最新情報を取得しています。<br />
+              少々お待ちください。
+            </p>
+            
+            {/* 緊急時の基本情報 */}
+            <div className="grid gap-4 text-left max-w-md mx-auto">
+              <div className="bg-background p-4 rounded border">
+                <h3 className="font-semibold">AI Assistant Pro</h3>
+                <p className="text-sm text-muted-foreground">多機能AIアシスタント</p>
+              </div>
+              <div className="bg-background p-4 rounded border">
+                <h3 className="font-semibold">Smart Data Analyzer</h3>
+                <p className="text-sm text-muted-foreground">データ分析AI</p>
+              </div>
+              <div className="bg-background p-4 rounded border">
+                <h3 className="font-semibold">AI Document Processor</h3>
+                <p className="text-sm text-muted-foreground">文書処理AI</p>
+              </div>
+            </div>
+            
+            <div className="mt-8">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-base font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                詳細についてお問い合わせ
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

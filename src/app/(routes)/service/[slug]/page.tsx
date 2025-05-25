@@ -36,15 +36,23 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
 export default async function ServicePage({ params }: any): Promise<JSX.Element> {
   try {
     const service = await getServiceData(params.slug)
+    
+    if (!service) {
+      notFound()
+    }
+    
     const {
       title,
       content,
       serviceFields,
+      serviceDetail,
       industries,
       featuredImage
     } = service
 
-    const logoUrl = serviceFields?.logo?.sourceUrl || DEFAULT_LOGO
+    // Handle both new and legacy field structures
+    const fields = serviceDetail || serviceFields
+    const logoUrl = fields?.logo?.node?.sourceUrl || fields?.logo?.sourceUrl || DEFAULT_LOGO
 
     // Schema.org用のJSONデータ（実際はYoast SEOで生成されるべき）
     const schemaData = {
@@ -56,7 +64,7 @@ export default async function ServicePage({ params }: any): Promise<JSX.Element>
         "@type": "Organization",
         "name": "AI比較.com"
       },
-      "priceRange": serviceFields?.price || "要問い合わせ",
+      "priceRange": fields?.price || "要問い合わせ",
       "image": featuredImage?.node?.sourceUrl || logoUrl
     }
 
@@ -123,16 +131,16 @@ export default async function ServicePage({ params }: any): Promise<JSX.Element>
                 <div>
                   <h3 className="text-lg font-bold mb-4">サービス概要</h3>
 
-                  {serviceFields?.summary && (
+                  {(fields?.serviceSummary || fields?.summary) && (
                     <div className="mb-4">
-                      <p className="text-sm text-muted-foreground">{serviceFields.summary}</p>
+                      <p className="text-sm text-muted-foreground">{fields.serviceSummary || fields.summary}</p>
                     </div>
                   )}
 
-                  {serviceFields?.price && (
+                  {fields?.price && (
                     <div className="mb-4">
                       <h4 className="text-sm font-medium mb-1">料金プラン</h4>
-                      <p className="text-sm">{serviceFields.price}</p>
+                      <p className="text-sm">{fields.price}</p>
                     </div>
                   )}
                 </div>
@@ -178,12 +186,41 @@ export default async function ServicePage({ params }: any): Promise<JSX.Element>
   } catch (error) {
     console.error('Failed to load service page:', error)
     return (
-      <div className="container-wide py-12 text-center">
-        <h1 className="text-3xl font-bold mb-4">エラーが発生しました</h1>
-        <p className="text-muted-foreground">
-          サービス情報の読み込み中にエラーが発生しました。<br />
-          しばらく経ってからもう一度お試しください。
-        </p>
+      <div className="container-wide py-12">
+        <div className="max-w-2xl mx-auto text-center">
+          <h1 className="text-3xl font-bold mb-4">サービス詳細</h1>
+          <div className="bg-secondary/50 rounded-lg p-8">
+            <h2 className="text-xl font-semibold mb-4">サービス情報を読み込み中</h2>
+            <p className="text-muted-foreground mb-8">
+              サービスの詳細情報を取得しています。<br />
+              少々お待ちください。
+            </p>
+            
+            <div className="space-y-4 text-left max-w-md mx-auto">
+              <div className="bg-background p-4 rounded border">
+                <h3 className="font-semibold">機能・特徴</h3>
+                <p className="text-sm text-muted-foreground">詳細な機能説明を準備中</p>
+              </div>
+              <div className="bg-background p-4 rounded border">
+                <h3 className="font-semibold">料金プラン</h3>
+                <p className="text-sm text-muted-foreground">価格情報を取得中</p>
+              </div>
+              <div className="bg-background p-4 rounded border">
+                <h3 className="font-semibold">導入事例</h3>
+                <p className="text-sm text-muted-foreground">成功事例を準備中</p>
+              </div>
+            </div>
+            
+            <div className="mt-8">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-base font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              >
+                お問い合わせ
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }

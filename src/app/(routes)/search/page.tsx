@@ -29,6 +29,8 @@ export default function SearchPage() {
         setServices([...results.services, ...results.posts])
       } catch (error) {
         console.error('Search failed:', error)
+        // エラー時は空の結果を設定
+        setServices([])
       } finally {
         setIsLoading(false)
       }
@@ -73,19 +75,45 @@ export default function SearchPage() {
               </div>
             ) : (
               <div className="py-20 text-center">
-                <p className="text-muted-foreground">
-                  「{query}」に一致する結果が見つかりませんでした。<br />
-                  別のキーワードで検索してみてください。
-                </p>
+                <div className="max-w-md mx-auto">
+                  <h3 className="text-lg font-semibold mb-4">検索結果が見つかりません</h3>
+                  <p className="text-muted-foreground mb-6">
+                    「{query}」に一致する結果が見つかりませんでした。<br />
+                    別のキーワードで検索してみてください。
+                  </p>
+                  
+                  <div className="space-y-2 text-sm text-muted-foreground">
+                    <p>検索のヒント：</p>
+                    <ul className="text-left space-y-1">
+                      <li>• 「AI」「データ分析」「自動化」などのキーワード</li>
+                      <li>• 「金融」「製薬」「製造」などの業界名</li>
+                      <li>• 「効率化」「BPO」「アシスタント」など</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             )}
           </div>
         ) : (
           <div className="py-20 text-center">
-            <p className="text-muted-foreground">
-              検索キーワードを入力してください。<br />
-              AIサービス名や機能、業界名などで検索できます。
-            </p>
+            <div className="max-w-md mx-auto">
+              <h3 className="text-lg font-semibold mb-4">AIサービスを検索</h3>
+              <p className="text-muted-foreground mb-6">
+                検索キーワードを入力してください。<br />
+                AIサービス名や機能、業界名などで検索できます。
+              </p>
+              
+              <div className="grid gap-3 text-sm">
+                <div className="p-3 bg-secondary/50 rounded border">
+                  <span className="font-medium">人気の検索キーワード</span>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    <span className="px-2 py-1 bg-background rounded text-xs">AI</span>
+                    <span className="px-2 py-1 bg-background rounded text-xs">データ分析</span>
+                    <span className="px-2 py-1 bg-background rounded text-xs">自動化</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
