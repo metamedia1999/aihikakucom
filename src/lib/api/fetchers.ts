@@ -179,6 +179,100 @@
 //     posts: response.posts.nodes,
 //   }
 // }
+// import { gql } from 'graphql-request'
+
+// // =============================
+// // WordPress ↔︎ WPGraphQL のスキーマに合わせる
+// //   - CPT 名が `Service` → allService / service
+// //   - ACF の Group 名が `serviceDetail`
+// // =============================
+
+// // ホームページ用クエリ
+// export const GET_HOME_DATA = gql`
+//   query GetHomeData {
+//     allService(first: 12) {
+//       nodes {
+//         id
+//         slug
+//         title
+//         featuredImage {
+//           node {
+//             sourceUrl
+//           }
+//         }
+//         serviceDetail {
+//           price
+//           serviceSummary
+//           logo {
+//             sourceUrl
+//           }
+//         }
+//         industries {
+//           nodes {
+//             id
+//             slug
+//             name
+//           }
+//         }
+//       }
+//     }
+//   }
+// `
+
+// // サービス詳細ページ用クエリ
+// export const GET_SERVICE_DATA = gql`
+//   query GetServiceData($slug: ID!) {
+//     service(id: $slug, idType: SLUG) {
+//       id
+//       slug
+//       title
+//       content
+//       featuredImage {
+//         node {
+//           sourceUrl
+//         }
+//       }
+//       serviceDetail {
+//         price
+//         serviceSummary
+//         aiUtilization
+//         effectiveness
+//         supportLevel
+//         industryCategory
+//         transparencyScore
+//         logo {
+//           sourceUrl
+//         }
+//       }
+//       industries {
+//         nodes {
+//           id
+//           slug
+//           name
+//         }
+//       }
+//     }
+//   }
+// `
+// // getHomeData 追加
+// export async function getHomeData() {
+//   const data = await fetchGraphQL<{ allService: { nodes: Service[] } }>(GET_HOME_DATA)
+//   return { services: data.allService.nodes }
+// }
+
+// // getPostData 追加
+// export async function getPostData(slug: string) {
+//   const query = gql`...` // ← GET_POST_DATA 定義が別途必要
+//   const data = await fetchGraphQL<{ post: Post }>(query, { slug })
+//   return data.post
+// }
+
+// // searchContent 追加
+// export async function searchContent(term: string) {
+//   const query = gql`...` // ← SEARCH_QUERY 定義が別途必要
+//   const data = await fetchGraphQL<{ services: { nodes: Service[] }; posts: { nodes: Post[] } }>(query, { searchTerm: term })
+//   return { services: data.services.nodes, posts: data.posts.nodes }
+// }
 import { gql } from 'graphql-request'
 
 // =============================
@@ -254,22 +348,3 @@ export const GET_SERVICE_DATA = gql`
     }
   }
 `
-// getHomeData 追加
-export async function getHomeData() {
-  const data = await fetchGraphQL<{ allService: { nodes: Service[] } }>(GET_HOME_DATA)
-  return { services: data.allService.nodes }
-}
-
-// getPostData 追加
-export async function getPostData(slug: string) {
-  const query = gql`...` // ← GET_POST_DATA 定義が別途必要
-  const data = await fetchGraphQL<{ post: Post }>(query, { slug })
-  return data.post
-}
-
-// searchContent 追加
-export async function searchContent(term: string) {
-  const query = gql`...` // ← SEARCH_QUERY 定義が別途必要
-  const data = await fetchGraphQL<{ services: { nodes: Service[] }; posts: { nodes: Post[] } }>(query, { searchTerm: term })
-  return { services: data.services.nodes, posts: data.posts.nodes }
-}
