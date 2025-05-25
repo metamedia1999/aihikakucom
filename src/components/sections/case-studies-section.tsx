@@ -27,15 +27,15 @@ export function CaseStudiesSection() {
       <div className="container-wide">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">導入事例</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <div className="text-muted-foreground max-w-2xl mx-auto">
             AIサービスを導入した企業の成功事例をご紹介します。
             業務効率化や売上向上など、具体的な成果をご覧ください。
-          </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {caseStudies.map((caseStudy) => (
-            <div key={caseStudy.id} className="case-study-card border rounded-md bg-white overflow-hidden">
+            <a key={caseStudy.id} href={`/case-studies/${caseStudy.id}`} className="case-study-card border rounded-md bg-white overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
               <div className="relative h-48">
                 <Image
                   src={caseStudy.image}
@@ -50,9 +50,9 @@ export function CaseStudiesSection() {
                   <span className="text-xs bg-secondary px-2 py-1 rounded">{caseStudy.industry}</span>
                 </div>
                 <h3 className="font-semibold text-lg mb-2">{caseStudy.title}</h3>
-                <p className="text-sm text-muted-foreground">{caseStudy.description}</p>
+                <div className="text-sm text-muted-foreground">{caseStudy.description}</div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>

@@ -14,9 +14,9 @@ export function Footer() {
             <Link href="/" className="flex items-center space-x-2">
               <span className="text-xl font-bold">{SITE_NAME}</span>
             </Link>
-            <p className="mt-3 text-sm text-muted-foreground">
+            <div className="mt-3 text-sm text-muted-foreground">
               AIBPOサービスの検索・比較プラットフォーム。業種別・業務別のAIサービスを簡単に探せます。
-            </p>
+            </div>
             <div className="mt-4">
               <a
                 href="https://twitter.com/aihikaku"
@@ -53,7 +53,7 @@ export function Footer() {
       </div>
       <Separator />
       <div className="container-wide py-4 text-center text-xs text-muted-foreground">
-        <p>© {currentYear} {SITE_NAME} All rights reserved.</p>
+        <div>© {currentYear} {SITE_NAME} All rights reserved.</div>
       </div>
     </footer>
   )

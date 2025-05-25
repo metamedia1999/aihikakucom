@@ -8,10 +8,10 @@ export function CTASection() {
           <h2 className="text-3xl font-bold mb-4">
             AI導入でビジネスを次のレベルへ
           </h2>
-          <p className="text-xl text-muted-foreground mb-8">
+          <div className="text-xl text-muted-foreground mb-8">
             AI比較.comでは、あなたのビジネスに最適なAIサービスを見つけるお手伝いをします。<br />
             まずは無料相談から始めてみませんか？
-          </p>
+          </div>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

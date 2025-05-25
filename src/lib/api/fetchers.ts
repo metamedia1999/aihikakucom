@@ -6,7 +6,11 @@ import {
   getMockServiceData,
   getMockPostData,
   mockSearchContent,
-  getMockIndustryData
+  getMockIndustryData,
+  getMockAiServices,
+  getMockCaseStudies,
+  getMockIndustrySolutions,
+  getMockCaseStudy
 } from './mocks'
 
 // =============================
@@ -269,5 +273,179 @@ export async function getIndustries(): Promise<Industry[]> {
     console.error('Error fetching industries:', error)
     const mockData = getMockHomeData()
     return mockData.industries
+  }
+}
+
+// =============================
+// WordPress カスタムポストタイプ: AI Services, Case Studies, Industry Solutions
+// =============================
+
+// AI サービス取得
+export async function getAiServices(): Promise<any[]> {
+  console.log('getAiServices called')
+  
+  if (USE_MOCK_DATA) {
+    return getMockAiServices()
+  }
+
+  try {
+    const data = await fetchGraphQL<{ aiServices: { nodes: any[] } }>(gql`
+      query GetAiServices {
+        aiServices {
+          nodes {
+            id
+            slug
+            title
+            content
+            featuredImage {
+              node {
+                sourceUrl
+                altText
+              }
+            }
+            aiServiceFields {
+              price
+              features
+              category
+              vendor
+              rating
+              summary
+            }
+          }
+        }
+      }
+    `)
+    return data.aiServices.nodes
+  } catch (error) {
+    console.warn('WordPress AI services fetch failed, falling back to mock data:', error)
+    return getMockAiServices()
+  }
+}
+
+// ケーススタディ取得
+export async function getCaseStudies(): Promise<any[]> {
+  console.log('getCaseStudies called')
+  
+  if (USE_MOCK_DATA) {
+    return getMockCaseStudies()
+  }
+
+  try {
+    const data = await fetchGraphQL<{ caseStudies: { nodes: any[] } }>(gql`
+      query GetCaseStudies {
+        caseStudies {
+          nodes {
+            id
+            slug
+            title
+            content
+            featuredImage {
+              node {
+                sourceUrl
+                altText
+              }
+            }
+            caseStudyFields {
+              company
+              industry
+              challenge
+              solution
+              results
+              usedServices
+            }
+          }
+        }
+      }
+    `)
+    return data.caseStudies.nodes
+  } catch (error) {
+    console.warn('WordPress case studies fetch failed, falling back to mock data:', error)
+    return getMockCaseStudies()
+  }
+}
+
+// 業界別ソリューション取得
+export async function getIndustrySolutions(): Promise<any[]> {
+  console.log('getIndustrySolutions called')
+  
+  if (USE_MOCK_DATA) {
+    return getMockIndustrySolutions()
+  }
+
+  try {
+    const data = await fetchGraphQL<{ industrySolutions: { nodes: any[] } }>(gql`
+      query GetIndustrySolutions {
+        industrySolutions {
+          nodes {
+            id
+            slug
+            title
+            content
+            featuredImage {
+              node {
+                sourceUrl
+                altText
+              }
+            }
+            industrySolutionFields {
+              targetIndustry
+              problemsToSolve
+              recommendedServices
+              expectedBenefits
+              implementationTime
+            }
+          }
+        }
+      }
+    `)
+    return data.industrySolutions.nodes
+  } catch (error) {
+    console.warn('WordPress industry solutions fetch failed, falling back to mock data:', error)
+    return getMockIndustrySolutions()
+  }
+}
+
+// 単一ケーススタディ取得
+export async function getCaseStudy(slug: string): Promise<any> {
+  console.log('getCaseStudy called for slug:', slug)
+  
+  if (USE_MOCK_DATA) {
+    return getMockCaseStudy(slug)
+  }
+
+  try {
+    const data = await fetchGraphQL<{ caseStudy: any }>(gql`
+      query GetCaseStudy($slug: ID!) {
+        caseStudy(id: $slug, idType: SLUG) {
+          id
+          slug
+          title
+          content
+          featuredImage {
+            node {
+              sourceUrl
+              altText
+            }
+          }
+          caseStudyFields {
+            company
+            industry
+            challenge
+            solution
+            results
+            usedServices
+          }
+        }
+      }
+    `, { slug })
+    
+    if (!data.caseStudy) {
+      throw new Error(`Case study with slug "${slug}" not found`)
+    }
+    
+    return data.caseStudy
+  } catch (error) {
+    console.warn('WordPress case study fetch failed, falling back to mock data:', error)
+    return getMockCaseStudy(slug)
   }
 }

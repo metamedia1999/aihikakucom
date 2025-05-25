@@ -9,7 +9,7 @@ import { IndustriesSection } from '@/components/sections/industries-section'
 import { FeaturedServicesSection } from '@/components/sections/featured-services-section'
 import { CaseStudiesSection } from '@/components/sections/case-studies-section'
 import { CTASection } from '@/components/sections/cta-section'
-import { getHomeData } from '@/lib/api/fetchers'
+import { getHomeData, getIndustrySolutions } from '@/lib/api/fetchers'
 
 export const metadata: Metadata = {
   title: SITE_NAME,
@@ -70,6 +70,9 @@ export default async function HomePage() {
     // 包括的なホームページデータを取得
     const homeData = await getHomeData()
     const { services, posts, industries } = homeData
+    
+    // 業界別ソリューションデータを取得
+    const industrySolutions = await getIndustrySolutions()
 
     return (
       <>
@@ -81,10 +84,10 @@ export default async function HomePage() {
           <div className="container-wide">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">あなたの悩みから最適なAIサービスを見つける</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
+              <div className="text-muted-foreground max-w-2xl mx-auto">
                 業務課題に合わせて、最適なAIサービスをご紹介します。
                 各カテゴリーから、あなたのビジネスに最適なソリューションを見つけましょう。
-              </p>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -101,9 +104,9 @@ export default async function HomePage() {
             <div className="container-wide">
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold mb-4">おすすめAIサービス</h2>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
+                <div className="text-muted-foreground max-w-2xl mx-auto">
                   業務効率化に実績のあるAIサービスを厳選してご紹介します。
-                </p>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -125,7 +128,7 @@ export default async function HomePage() {
         )}
 
         {/* 業界別セクション */}
-        <IndustriesSection />
+        <IndustriesSection solutions={industrySolutions} />
 
         {/* 最新記事セクション */}
         {posts && posts.length > 0 && (
@@ -133,9 +136,9 @@ export default async function HomePage() {
             <div className="container-wide">
               <div className="text-center mb-12">
                 <h2 className="text-3xl font-bold mb-4">AI活用に関する最新記事</h2>
-                <p className="text-muted-foreground max-w-2xl mx-auto">
+                <div className="text-muted-foreground max-w-2xl mx-auto">
                   AIの導入事例や活用のポイントなど、役立つ情報をお届けします。
-                </p>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -159,9 +162,9 @@ export default async function HomePage() {
                           {post.title}
                         </Link>
                       </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-3">
+                      <div className="text-sm text-muted-foreground line-clamp-3">
                         {post.excerpt}
-                      </p>
+                      </div>
                       {post.categories?.nodes && post.categories.nodes.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-4">
                           {post.categories.nodes.slice(0, 2).map((category) => (

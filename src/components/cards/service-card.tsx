@@ -58,55 +58,68 @@ export function ServiceCard({ service, featured = false }: ServiceCardProps) {
 
   return (
     <Link href={`/service/${slug}`}>
-      <div className="service-card border rounded-md bg-white hover:shadow transition-shadow duration-150 h-full overflow-hidden">
-        <div className="p-4 flex items-start space-x-4">
-          <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded bg-secondary">
+      <div className="service-card border rounded-lg bg-card hover:shadow-lg transition-all duration-200 h-full overflow-hidden group">
+        <div className="p-4 sm:p-6 flex items-start space-x-3 sm:space-x-4">
+          <div className="relative h-12 w-12 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-lg bg-secondary/50">
             <Image
               src={logoUrl}
               alt={title}
               fill
-              className="object-cover"
-              sizes="64px"
+              className="object-cover transition-transform duration-200 group-hover:scale-105"
+              sizes="(max-width: 640px) 48px, 64px"
             />
           </div>
-          <div className="space-y-1">
-            <h3 className="font-semibold leading-tight">{title}</h3>
+          <div className="space-y-1 min-w-0 flex-1">
+            <h3 className="font-semibold leading-tight text-sm sm:text-base line-clamp-2 group-hover:text-primary transition-colors">{title}</h3>
             {serviceFields?.price && (
-              <p className="text-xs text-muted-foreground">
+              <div className="text-xs text-muted-foreground truncate">
                 料金: {serviceFields.price}
-              </p>
+              </div>
             )}
             {industries?.nodes && industries.nodes.length > 0 && (
               <div className="flex flex-wrap gap-1">
-                {industries.nodes.map((industry: any) => (
-                  <Badge key={industry.id} variant="secondary" className="text-[10px]">
+                {industries.nodes.slice(0, 2).map((industry: any) => (
+                  <Badge key={industry.id} variant="secondary" className="text-[10px] px-2 py-0.5">
                     {industry.name}
                   </Badge>
                 ))}
+                {industries.nodes.length > 2 && (
+                  <Badge variant="outline" className="text-[10px] px-2 py-0.5">
+                    +{industries.nodes.length - 2}
+                  </Badge>
+                )}
               </div>
             )}
           </div>
         </div>
 
         {/* KPI Badges */}
-        <div className="px-4 pb-2">
-          <div className="grid grid-cols-2 gap-2 text-[10px] border-t border-b py-2 my-2">
+        <div className="px-4 sm:px-6 pb-2">
+          <div className="grid grid-cols-2 gap-1 sm:gap-2 text-[10px] border-t border-b py-2 my-2">
             {kpiList.map((kpi, index) => (
               <div key={index} className="flex justify-between items-center">
-                <span className="text-muted-foreground">{kpi.label}:</span>
-                <span className="font-medium">{kpi.value}</span>
+                <span className="text-muted-foreground truncate">{kpi.label}:</span>
+                <span className="font-medium ml-1">{kpi.value}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="px-4 pb-4">
-          <p className="text-sm text-muted-foreground line-clamp-2">{excerpt}</p>
+        <div className="px-4 sm:px-6 pb-4">
+          <div className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-2">{excerpt}</div>
           
           {/* Transparency Score - 円グラフを使わない代替表示 */}
-          <div className="mt-2 text-xs text-right">
-            <span className="text-muted-foreground">透明性スコア: </span>
-            <span className="font-medium text-blue-500">{Math.floor(Math.random() * 100)}</span>
+          <div className="flex justify-between items-center text-xs">
+            <span className="text-muted-foreground">透明性スコア</span>
+            <div className="flex items-center space-x-1">
+              <div className="w-8 h-1.5 bg-secondary rounded-full overflow-hidden">
+                <div 
+                  className="h-full bg-primary rounded-full transition-all duration-500"
+                  style={{ width: `${Math.floor(Math.random() * 100)}%` }}
+                />
+              </div>
+              <span className="font-medium text-primary">{Math.floor(Math.random() * 100)}</span>
+            </div>
           </div>
         </div>
       </div>

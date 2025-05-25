@@ -2,24 +2,39 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { MOCK_IMAGES } from '@/lib/constants'
 
-export function IndustriesSection() {
-  // モック業界データ
-  const industries = [
+interface IndustriesSectionProps {
+  solutions?: any[]
+}
+
+export function IndustriesSection({ solutions = [] }: IndustriesSectionProps) {
+  // フォールバック用のモック業界データ
+  const defaultIndustries = [
     { id: 'industry-1', name: '金融', slug: 'finance', image: MOCK_IMAGES.industry1 },
     { id: 'industry-2', name: '製造', slug: 'manufacturing', image: MOCK_IMAGES.industry2 },
     { id: 'industry-3', name: '製薬', slug: 'pharma', image: MOCK_IMAGES.industry3 },
     { id: 'industry-4', name: '小売', slug: 'retail', image: MOCK_IMAGES.industry4 }
   ];
 
+  // WordPressからのデータがある場合はそれを使用、ない場合はデフォルトを使用
+  const industries = solutions.length > 0 
+    ? solutions.map(solution => ({
+        id: solution.id,
+        name: solution.industrySolutionFields?.targetIndustry || solution.title,
+        slug: solution.slug,
+        image: solution.featuredImage?.node?.sourceUrl || MOCK_IMAGES.industry1,
+        description: solution.content || ''
+      }))
+    : defaultIndustries;
+
   return (
     <section className="py-16 bg-secondary/30">
       <div className="container-wide">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">業界別AIソリューション</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <div className="text-muted-foreground max-w-2xl mx-auto">
             各業界に特化したAIソリューションをご紹介します。
             あなたの業界に最適なAIサービスを見つけましょう。
-          </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

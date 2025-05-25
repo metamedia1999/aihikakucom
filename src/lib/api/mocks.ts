@@ -579,3 +579,125 @@ export function mockSearchContent(searchTerm: string): SearchResult {
     posts: JSON.parse(JSON.stringify(filteredPosts))
   };
 }
+
+// =============================
+// WordPress カスタムポストタイプ用モックデータ
+// =============================
+
+// AIサービス用モックデータ
+export function getMockAiServices() {
+  return [
+    {
+      id: 'ai-service-1',
+      slug: 'chatgpt-business',
+      title: 'ChatGPT Business',
+      content: 'ビジネス向けの高度なAI会話システム。カスタマーサポート、文書作成、データ分析など幅広い業務に活用できます。',
+      featuredImage: { node: { sourceUrl: MOCK_IMAGES.service1, altText: 'ChatGPT Business' } },
+      aiServiceFields: {
+        price: '月額2,000円/ユーザー',
+        features: ['24時間365日対応', 'API連携', 'カスタムモデル', 'セキュリティ強化'],
+        category: 'AI Assistant',
+        vendor: 'OpenAI',
+        rating: 4.8,
+        summary: 'エンタープライズ向けの強力なAIアシスタント'
+      }
+    },
+    {
+      id: 'ai-service-2',
+      slug: 'claude-enterprise',
+      title: 'Claude Enterprise',
+      content: 'Anthropic社が開発した安全性重視のAIアシスタント。長文処理と複雑な推論タスクに特化しています。',
+      featuredImage: { node: { sourceUrl: MOCK_IMAGES.service2, altText: 'Claude Enterprise' } },
+      aiServiceFields: {
+        price: '月額1,800円/ユーザー',
+        features: ['長文処理', '安全性重視', '複雑な推論', '高精度分析'],
+        category: 'AI Assistant',
+        vendor: 'Anthropic',
+        rating: 4.7,
+        summary: '安全性と精度を重視したエンタープライズAI'
+      }
+    }
+  ];
+}
+
+// ケーススタディ用モックデータ
+export function getMockCaseStudies() {
+  return [
+    {
+      id: 'case-1',
+      slug: 'case-1',
+      title: '株式会社ABCの業務効率化事例',
+      content: 'AIアシスタント導入による劇的な業務改善の事例をご紹介します。',
+      featuredImage: { node: { sourceUrl: MOCK_IMAGES.case1, altText: '株式会社ABC事例' } },
+      caseStudyFields: {
+        company: '株式会社ABC',
+        industry: '小売',
+        challenge: 'カスタマーサポートの負荷が高く、対応時間と品質に課題があった',
+        solution: 'AIアシスタントを導入し、よくある質問への自動応答を実現',
+        results: ['対応時間50%削減', '顧客満足度15%向上', '24時間365日対応実現'],
+        usedServices: ['ChatGPT API', 'AIチャットボット']
+      }
+    },
+    {
+      id: 'case-2',
+      slug: 'case-2',
+      title: 'XYZ製薬の研究開発効率化',
+      content: 'AI分析ツール活用による新薬開発プロセスの効率化事例です。',
+      featuredImage: { node: { sourceUrl: MOCK_IMAGES.case2, altText: 'XYZ製薬事例' } },
+      caseStudyFields: {
+        company: 'XYZ製薬',
+        industry: '製薬',
+        challenge: '膨大な実験データの解析に時間がかかり、研究効率が低下していた',
+        solution: '機械学習を活用したデータ分析プラットフォームを導入',
+        results: ['データ分析時間70%短縮', '研究効率3倍向上', '新薬候補発見率2倍'],
+        usedServices: ['機械学習プラットフォーム', 'データ分析AI']
+      }
+    }
+  ];
+}
+
+// 業界別ソリューション用モックデータ
+export function getMockIndustrySolutions() {
+  return [
+    {
+      id: 'solution-1',
+      slug: 'retail-ai-solution',
+      title: '小売業向けAIソリューション',
+      content: '小売業界に特化したAI活用で売上向上と業務効率化を実現',
+      featuredImage: { node: { sourceUrl: MOCK_IMAGES.industry1, altText: '小売業AIソリューション' } },
+      industrySolutionFields: {
+        targetIndustry: '小売業',
+        problemsToSolve: ['在庫管理の最適化', '需要予測の精度向上', 'カスタマーサービスの効率化'],
+        recommendedServices: ['AI需要予測ツール', 'チャットボット', '画像認識システム'],
+        expectedBenefits: ['売上15%向上', '在庫コスト20%削減', '顧客満足度向上'],
+        implementationTime: '3-6ヶ月'
+      }
+    },
+    {
+      id: 'solution-2',
+      slug: 'manufacturing-ai-solution',
+      title: '製造業向けAIソリューション',
+      content: '製造業の品質管理と生産効率向上を支援するAIソリューション',
+      featuredImage: { node: { sourceUrl: MOCK_IMAGES.industry2, altText: '製造業AIソリューション' } },
+      industrySolutionFields: {
+        targetIndustry: '製造業',
+        problemsToSolve: ['品質検査の精度向上', '予知保全の実現', '生産計画の最適化'],
+        recommendedServices: ['AI画像認識', '予知保全システム', '生産管理AI'],
+        expectedBenefits: ['不良品率30%削減', '設備稼働率向上', '生産効率20%向上'],
+        implementationTime: '6-12ヶ月'
+      }
+    }
+  ];
+}
+
+// 単一ケーススタディ取得用モック
+export function getMockCaseStudy(slug: string) {
+  const caseStudies = getMockCaseStudies();
+  const caseStudy = caseStudies.find(c => c.slug === slug);
+  
+  if (!caseStudy) {
+    throw new Error(`Case study with slug "${slug}" not found`);
+  }
+  
+  return JSON.parse(JSON.stringify(caseStudy));
+}

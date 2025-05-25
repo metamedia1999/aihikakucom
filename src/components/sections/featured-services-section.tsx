@@ -10,10 +10,10 @@ export function FeaturedServicesSection({ services }: FeaturedServicesSectionPro
       <div className="container-wide">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">おすすめAIサービス</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <div className="text-muted-foreground max-w-2xl mx-auto">
             中小企業の業務効率化に役立つAIサービスをご紹介します。
             各サービスの詳細ページで機能や料金を比較検討できます。
-          </p>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
