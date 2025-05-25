@@ -302,7 +302,9 @@ export const GET_HOME_DATA = gql`
           price
           serviceSummary
           logo {
-            sourceUrl
+            node {
+              sourceUrl
+            }
           }
         }
         industries {
@@ -342,11 +344,6 @@ export const GET_HOME_DATA = gql`
         slug
         name
         description
-        featuredImage {
-          node {
-            sourceUrl
-          }
-        }
       }
     }
   }
@@ -375,7 +372,9 @@ export const GET_SERVICE_DATA = gql`
         industryCategory
         transparencyScore
         logo {
-          sourceUrl
+          node {
+            sourceUrl
+          }
         }
       }
       industries {
@@ -434,7 +433,9 @@ export const SEARCH_QUERY = gql`
           price
           serviceSummary
           logo {
-            sourceUrl
+            node {
+              sourceUrl
+            }
           }
         }
         industries {
