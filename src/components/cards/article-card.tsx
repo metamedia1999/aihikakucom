@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { formatDate } from '@/lib/utils'
+import { formatDate, stripHtml } from '@/lib/utils'
 import { DEFAULT_FEATURED_IMAGE } from '@/lib/constants'
 import { Post } from '@/types'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
@@ -13,6 +13,8 @@ interface ArticleCardProps {
 }
 
 export function ArticleCard({ post, featured = false }: ArticleCardProps) {
+  console.log('ArticleCard rendering:', { title: post?.title, excerpt: post?.excerpt })
+  
   const {
     slug,
     title,
@@ -55,7 +57,7 @@ export function ArticleCard({ post, featured = false }: ArticleCardProps) {
             </div>
           )}
 
-          <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{excerpt}</p>
+          <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{stripHtml(excerpt || '')}</p>
         </CardContent>
 
         <CardFooter className="p-4 pt-0">

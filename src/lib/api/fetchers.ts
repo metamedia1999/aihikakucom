@@ -281,14 +281,23 @@ export async function getIndustries(): Promise<Industry[]> {
 // =============================
 
 // AI サービス取得
+// 処理フロー:
+// 1. モックデータ使用フラグをチェック
+// 2. WordPress API経由でaiServicesカスタムポストタイプからデータ取得  
+// 3. サービス詳細（価格、機能、カテゴリ、ベンダー、評価等）を含む
+// 4. API失敗時はモックデータにフォールバック
 export async function getAiServices(): Promise<any[]> {
   console.log('getAiServices called')
   
+  // モックデータを使用する場合の早期リターン
   if (USE_MOCK_DATA) {
+    console.log('Using mock data for AI services')
     return getMockAiServices()
   }
 
   try {
+    console.log('Fetching AI services from WordPress...')
+    // WordPress GraphQL APIからAIサービスデータを取得
     const data = await fetchGraphQL<{ aiServices: { nodes: any[] } }>(gql`
       query GetAiServices {
         aiServices {
@@ -315,6 +324,7 @@ export async function getAiServices(): Promise<any[]> {
         }
       }
     `)
+    console.log('AI services fetched successfully')
     return data.aiServices.nodes
   } catch (error) {
     console.warn('WordPress AI services fetch failed, falling back to mock data:', error)
@@ -323,14 +333,23 @@ export async function getAiServices(): Promise<any[]> {
 }
 
 // ケーススタディ取得
+// 処理フロー:
+// 1. モックデータ使用フラグをチェック
+// 2. WordPress API経由でcaseStudiesカスタムポストタイプからデータ取得
+// 3. 各ケースの詳細（企業名、業界、課題、解決策、結果等）を含む
+// 4. API失敗時はモックデータにフォールバック
 export async function getCaseStudies(): Promise<any[]> {
   console.log('getCaseStudies called')
   
+  // モックデータを使用する場合の早期リターン
   if (USE_MOCK_DATA) {
+    console.log('Using mock data for case studies')
     return getMockCaseStudies()
   }
 
   try {
+    console.log('Fetching case studies from WordPress...')
+    // WordPress GraphQL APIからケーススタディデータを取得
     const data = await fetchGraphQL<{ caseStudies: { nodes: any[] } }>(gql`
       query GetCaseStudies {
         caseStudies {
@@ -357,6 +376,7 @@ export async function getCaseStudies(): Promise<any[]> {
         }
       }
     `)
+    console.log('Case studies fetched successfully')
     return data.caseStudies.nodes
   } catch (error) {
     console.warn('WordPress case studies fetch failed, falling back to mock data:', error)
@@ -365,14 +385,23 @@ export async function getCaseStudies(): Promise<any[]> {
 }
 
 // 業界別ソリューション取得
+// 処理フロー:
+// 1. モックデータ使用フラグをチェック
+// 2. WordPress API経由でindustrySolutionsカスタムポストタイプからデータ取得
+// 3. 各ソリューションの詳細情報（対象業界、解決課題、推奨サービス等）を含む
+// 4. API失敗時はモックデータにフォールバック
 export async function getIndustrySolutions(): Promise<any[]> {
   console.log('getIndustrySolutions called')
   
+  // モックデータを使用する場合の早期リターン
   if (USE_MOCK_DATA) {
+    console.log('Using mock data for industry solutions')
     return getMockIndustrySolutions()
   }
 
   try {
+    console.log('Fetching industry solutions from WordPress...')
+    // WordPress GraphQL APIから業界別ソリューションデータを取得
     const data = await fetchGraphQL<{ industrySolutions: { nodes: any[] } }>(gql`
       query GetIndustrySolutions {
         industrySolutions {
@@ -398,6 +427,7 @@ export async function getIndustrySolutions(): Promise<any[]> {
         }
       }
     `)
+    console.log('Industry solutions fetched successfully')
     return data.industrySolutions.nodes
   } catch (error) {
     console.warn('WordPress industry solutions fetch failed, falling back to mock data:', error)

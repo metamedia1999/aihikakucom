@@ -17,7 +17,14 @@ export function formatDate(dateString: string): string {
 
 // HTMLタグを削除する関数
 export function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
+  if (!html) {
+    console.log('stripHtml called with empty/null value')
+    return '';
+  }
+  console.log('stripHtml called with:', html.substring(0, 100) + '...')
+  const stripped = html.replace(/<[^>]*>/g, '');
+  console.log('stripHtml result:', stripped.substring(0, 100) + '...')
+  return stripped;
 }
 
 // テキストを省略する関数

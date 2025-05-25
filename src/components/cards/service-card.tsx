@@ -2,9 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { DEFAULT_LOGO } from '@/lib/constants'
 import { Badge } from '@/components/ui/badge'
-// import { Industry, Service } from '@/types'
-// import { CircularProgressbar } from 'react-circular-progressbar'
-// import 'react-circular-progressbar/dist/styles.css'
+import { stripHtml } from '@/lib/utils'
 
 interface ServiceCardProps {
   service: any
@@ -12,6 +10,8 @@ interface ServiceCardProps {
 }
 
 export function ServiceCard({ service, featured = false }: ServiceCardProps) {
+  console.log('ServiceCard rendering:', { title: service?.title, excerpt: service?.excerpt })
+  
   const {
     slug,
     title,
@@ -106,7 +106,7 @@ export function ServiceCard({ service, featured = false }: ServiceCardProps) {
         </div>
 
         <div className="px-4 sm:px-6 pb-4">
-          <div className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-2">{excerpt}</div>
+          <div className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-2">{stripHtml(excerpt || '')}</div>
           
           {/* Transparency Score - 円グラフを使わない代替表示 */}
           <div className="flex justify-between items-center text-xs">

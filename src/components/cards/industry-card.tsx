@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 import { Industry } from '@/types'
 import { INDUSTRIES } from '@/lib/constants'
+import { stripHtml } from '@/lib/utils'
 
 interface IndustryCardProps {
   industry: Industry
@@ -23,7 +24,7 @@ export function IndustryCard({ industry }: IndustryCardProps) {
           <div className="mb-4 text-4xl">{icon}</div>
           <h3 className="text-xl font-bold mb-2">{name}</h3>
           <p className="text-sm text-muted-foreground">
-            {description || `${name}業界向けのAIBPOサービスを見つけましょう。`}
+            {stripHtml(description || `${name}業界向けのAIBPOサービスを見つけましょう。`)}
           </p>
         </CardContent>
         <CardFooter className="p-6 pt-0 flex justify-end">
