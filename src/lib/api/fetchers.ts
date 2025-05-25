@@ -163,3 +163,19 @@ export async function getServiceData(slug: string): Promise<Service> {
   const data = await fetchGraphQL<{ service: Service }>(GET_SERVICE_DATA, { slug })
   return data.service
 }
+
+import { SEARCH_QUERY } from './queries'
+import type { Service, Post } from '@/types'
+
+// 検索クエリ実行関数
+export async function searchContent(searchTerm: string): Promise<{ services: Service[]; posts: Post[] }> {
+  const response = await fetchGraphQL<{
+    services: { nodes: Service[] }
+    posts: { nodes: Post[] }
+  }>(SEARCH_QUERY, { searchTerm })
+
+  return {
+    services: response.services.nodes,
+    posts: response.posts.nodes,
+  }
+}
