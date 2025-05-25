@@ -274,6 +274,8 @@
 //   return { services: data.services.nodes, posts: data.posts.nodes }
 // }
 import { gql } from 'graphql-request'
+import { fetchGraphQL } from './graphql-client'
+import type { Service, Post, SearchResult, Industry } from '@/types'
 
 // =============================
 // WordPress ↔︎ WPGraphQL のスキーマに合わせる
@@ -289,6 +291,8 @@ export const GET_HOME_DATA = gql`
         id
         slug
         title
+        excerpt
+        content
         featuredImage {
           node {
             sourceUrl
@@ -310,6 +314,41 @@ export const GET_HOME_DATA = gql`
         }
       }
     }
+    posts(first: 10) {
+      nodes {
+        id
+        slug
+        title
+        excerpt
+        content
+        date
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
+        categories {
+          nodes {
+            id
+            name
+            slug
+          }
+        }
+      }
+    }
+    categories(where: { hideEmpty: true }) {
+      nodes {
+        id
+        slug
+        name
+        description
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
+      }
+    }
   }
 `
 
@@ -320,6 +359,7 @@ export const GET_SERVICE_DATA = gql`
       id
       slug
       title
+      excerpt
       content
       featuredImage {
         node {
@@ -348,3 +388,170 @@ export const GET_SERVICE_DATA = gql`
     }
   }
 `
+
+// ブログ記事詳細ページ用クエリ
+export const GET_POST_DATA = gql`
+  query GetPostData($slug: ID!) {
+    post(id: $slug, idType: SLUG) {
+      id
+      slug
+      title
+      excerpt
+      content
+      date
+      featuredImage {
+        node {
+          sourceUrl
+        }
+      }
+      categories {
+        nodes {
+          id
+          name
+          slug
+        }
+      }
+    }
+  }
+`
+
+// 検索用クエリ
+export const SEARCH_QUERY = gql`
+  query SearchContent($searchTerm: String!) {
+    services: allService(where: { search: $searchTerm }, first: 20) {
+      nodes {
+        id
+        slug
+        title
+        excerpt
+        content
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
+        serviceDetail {
+          price
+          serviceSummary
+          logo {
+            sourceUrl
+          }
+        }
+        industries {
+          nodes {
+            id
+            slug
+            name
+          }
+        }
+      }
+    }
+    posts(where: { search: $searchTerm }, first: 20) {
+      nodes {
+        id
+        slug
+        title
+        excerpt
+        content
+        date
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
+        categories {
+          nodes {
+            id
+            name
+            slug
+          }
+        }
+      }
+    }
+  }
+`
+
+// =============================
+// Fetcher Functions
+// =============================
+
+// ホームページデータ取得
+export async function getHomeData() {
+  try {
+    const data = await fetchGraphQL<{
+      allService: { nodes: Service[] }
+      posts: { nodes: Post[] }
+      categories: { nodes: Industry[] }
+    }>(GET_HOME_DATA)
+    
+    return {
+      services: data.allService.nodes,
+      posts: data.posts.nodes,
+      industries: data.categories.nodes
+    }
+  } catch (error) {
+    console.error('Error fetching home data:', error)
+    throw new Error('ホームページデータの取得に失敗しました')
+  }
+}
+
+// ホームページ用サービス一覧取得
+export async function getHomeServices(): Promise<Service[]> {
+  try {
+    const data = await fetchGraphQL<{ allService: { nodes: Service[] } }>(GET_HOME_DATA)
+    return data.allService.nodes
+  } catch (error) {
+    console.error('Error fetching home services:', error)
+    throw new Error('サービス一覧の取得に失敗しました')
+  }
+}
+
+// サービス詳細データ取得
+export async function getServiceData(slug: string): Promise<Service> {
+  try {
+    const data = await fetchGraphQL<{ service: Service }>(GET_SERVICE_DATA, { slug })
+    if (!data.service) {
+      throw new Error(`Service with slug "${slug}" not found`)
+    }
+    return data.service
+  } catch (error) {
+    console.error('Error fetching service data:', error)
+    throw new Error('サービスデータの取得に失敗しました')
+  }
+}
+
+// ブログ記事データ取得
+export async function getPostData(slug: string): Promise<Post> {
+  try {
+    const data = await fetchGraphQL<{ post: Post }>(GET_POST_DATA, { slug })
+    if (!data.post) {
+      throw new Error(`Post with slug "${slug}" not found`)
+    }
+    return data.post
+  } catch (error) {
+    console.error('Error fetching post data:', error)
+    throw new Error('記事データの取得に失敗しました')
+  }
+}
+
+// 検索機能
+export async function searchContent(searchTerm: string): Promise<SearchResult> {
+  try {
+    if (!searchTerm || searchTerm.trim().length === 0) {
+      return { services: [], posts: [] }
+    }
+    
+    const data = await fetchGraphQL<{
+      services: { nodes: Service[] }
+      posts: { nodes: Post[] }
+    }>(SEARCH_QUERY, { searchTerm: searchTerm.trim() })
+    
+    return {
+      services: data.services.nodes,
+      posts: data.posts.nodes
+    }
+  } catch (error) {
+    console.error('Error searching content:', error)
+    throw new Error('検索の実行に失敗しました')
+  }
+}
