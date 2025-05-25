@@ -254,3 +254,22 @@ export const GET_SERVICE_DATA = gql`
     }
   }
 `
+// getHomeData 追加
+export async function getHomeData() {
+  const data = await fetchGraphQL<{ allService: { nodes: Service[] } }>(GET_HOME_DATA)
+  return { services: data.allService.nodes }
+}
+
+// getPostData 追加
+export async function getPostData(slug: string) {
+  const query = gql`...` // ← GET_POST_DATA 定義が別途必要
+  const data = await fetchGraphQL<{ post: Post }>(query, { slug })
+  return data.post
+}
+
+// searchContent 追加
+export async function searchContent(term: string) {
+  const query = gql`...` // ← SEARCH_QUERY 定義が別途必要
+  const data = await fetchGraphQL<{ services: { nodes: Service[] }; posts: { nodes: Post[] } }>(query, { searchTerm: term })
+  return { services: data.services.nodes, posts: data.posts.nodes }
+}
