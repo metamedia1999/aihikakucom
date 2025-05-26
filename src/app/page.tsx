@@ -163,7 +163,7 @@ export default async function HomePage() {
                         </Link>
                       </h3>
                       <div className="text-sm text-muted-foreground line-clamp-3">
-                        {post.excerpt}
+                        {post.excerpt ? post.excerpt.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ').trim() : ''}
                       </div>
                       {post.categories?.nodes && post.categories.nodes.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-4">

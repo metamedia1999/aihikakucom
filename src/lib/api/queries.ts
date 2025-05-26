@@ -709,16 +709,7 @@ export const GET_INDUSTRY_DATA = gql`
               sourceUrl
             }
           }
-          serviceDetail {
-            price
-            serviceSummary
-            logo {
-              node {
-                sourceUrl
-              }
-            }
-          }
-          industries {
+          categories {
             nodes {
               id
               slug

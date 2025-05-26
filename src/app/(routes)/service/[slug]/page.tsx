@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getServiceData } from '@/lib/api/fetchers'
+import { stripHtml } from '@/lib/utils'
 import { DEFAULT_LOGO, SITE_NAME } from '@/lib/constants'
 import { Badge } from '@/components/ui/badge'
 import { ArrowRight, Mail } from 'lucide-react'
@@ -11,9 +12,23 @@ import { ComparisonTable } from '@/components/tables/comparison-table'
 // 10分間隔でページを再生成
 export const revalidate = 600
 
-export async function generateMetadata({ params }: any): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug: encodedSlug } = await params
+  const slug = decodeURIComponent(encodedSlug)
+  
+  console.log('🔍 generateMetadata called for service:', {
+    originalSlug: encodedSlug,
+    decodedSlug: slug
+  })
+  
   try {
-    const service = await getServiceData(params.slug)
+    const service = await getServiceData(slug)
+    
+    console.log('✅ Service metadata generated successfully:', {
+      title: service.title,
+      hasExcerpt: !!service.excerpt,
+      hasImage: !!service.featuredImage?.node?.sourceUrl
+    })
 
     return {
       title: service.title,
@@ -27,19 +42,48 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
       },
     }
   } catch (error) {
+    console.error('❌ Service metadata generation failed:', {
+      originalSlug: encodedSlug,
+      decodedSlug: slug,
+      error: error instanceof Error ? error.message : error
+    })
+    
     return {
       title: 'サービスが見つかりません',
+      description: 'サービスの読み込み中にエラーが発生しました。'
     }
   }
 }
 
-export default async function ServicePage({ params }: any): Promise<JSX.Element> {
+export default async function ServicePage({ params }: { params: Promise<{ slug: string }> }): Promise<JSX.Element> {
+  const { slug: encodedSlug } = await params
+  const slug = decodeURIComponent(encodedSlug)
+  
+  console.log('📋 ServicePage rendering for slug:', {
+    originalSlug: encodedSlug,
+    decodedSlug: slug
+  })
+  
   try {
-    const service = await getServiceData(params.slug)
+    console.log('🔄 Fetching service data...')
+    const service = await getServiceData(slug)
     
     if (!service) {
+      console.error('❌ Service not found for slug:', {
+        originalSlug: encodedSlug,
+        decodedSlug: slug
+      })
       notFound()
     }
+    
+    console.log('✅ Service data fetched successfully:', {
+      title: service.title,
+      hasContent: !!service.content,
+      hasServiceDetail: !!service.serviceDetail,
+      hasServiceFields: !!service.serviceFields,
+      industriesCount: service.industries?.nodes?.length || 0,
+      hasImage: !!service.featuredImage?.node?.sourceUrl
+    })
     
     const {
       title,
@@ -50,9 +94,18 @@ export default async function ServicePage({ params }: any): Promise<JSX.Element>
       featuredImage
     } = service
 
-    // Handle both new and legacy field structures
+    // Handle both new and legacy field structures with debugging
     const fields = serviceDetail || serviceFields
+    
+    console.log('🔧 Service fields structure:', {
+      serviceDetail: serviceDetail ? Object.keys(serviceDetail) : null,
+      serviceFields: serviceFields ? Object.keys(serviceFields) : null,
+      finalFields: fields ? Object.keys(fields) : null
+    })
+    
     const logoUrl = fields?.logo?.node?.sourceUrl || fields?.logo?.sourceUrl || DEFAULT_LOGO
+    
+    console.log('🇿 Logo URL resolved:', logoUrl)
 
     // Schema.org用のJSONデータ（実際はYoast SEOで生成されるべき）
     const schemaData = {
@@ -184,17 +237,41 @@ export default async function ServicePage({ params }: any): Promise<JSX.Element>
       </div>
     )
   } catch (error) {
-    console.error('Failed to load service page:', error)
+    console.error('❌ Failed to load service page:', {
+      originalSlug: encodedSlug,
+      decodedSlug: slug,
+      error: error instanceof Error ? {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      } : error,
+      timestamp: new Date().toISOString()
+    })
+    
+    // GraphQLエラーの詳細情報を表示
+    if (error && typeof error === 'object' && 'response' in error) {
+      console.error('🚑 GraphQL Response Error:', error.response)
+    }
+    
     return (
       <div className="container-wide py-12">
         <div className="max-w-2xl mx-auto text-center">
-          <h1 className="text-3xl font-bold mb-4">サービス詳細</h1>
+          <h1 className="text-3xl font-bold mb-4">サービス詳細エラー</h1>
           <div className="bg-secondary/50 rounded-lg p-8">
-            <h2 className="text-xl font-semibold mb-4">サービス情報を読み込み中</h2>
+            <h2 className="text-xl font-semibold mb-4">サービス情報の読み込みに失敗しました</h2>
             <p className="text-muted-foreground mb-8">
-              サービスの詳細情報を取得しています。<br />
-              少々お待ちください。
+              サービスの詳細情報を取得できませんでした。<br />
+              しばらく待ってから再度お試しください。
             </p>
+            
+            {process.env.NODE_ENV === 'development' && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-left mb-8">
+                <h3 className="font-semibold text-red-800 mb-2">デバッグ情報:</h3>
+                <pre className="text-xs text-red-700 whitespace-pre-wrap">
+                  {error instanceof Error ? error.message : JSON.stringify(error, null, 2)}
+                </pre>
+              </div>
+            )}
             
             <div className="space-y-4 text-left max-w-md mx-auto">
               <div className="bg-background p-4 rounded border">

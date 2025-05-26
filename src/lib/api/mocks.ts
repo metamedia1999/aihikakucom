@@ -516,8 +516,21 @@ export function getMockIndustryData(slug: string) {
   console.log(`getMockIndustryData called for slug: ${slug}`);
   
   const industry = mockIndustries.find(i => i.slug === slug);
+  
   if (!industry) {
-    throw new Error(`Industry with slug ${slug} not found`);
+    console.warn(`Industry with slug ${slug} not found, returning default industry data`);
+    const defaultIndustry = mockIndustries[0];
+    const defaultServices = mockServices.slice(0, 3);
+    
+    return {
+      industry: JSON.parse(JSON.stringify({
+        ...defaultIndustry,
+        slug: slug,
+        name: `業界ソリューション (${slug})`,
+        description: `${slug}向けのAIソリューションを提供します。`
+      })),
+      services: JSON.parse(JSON.stringify(defaultServices))
+    };
   }
 
   const industryServices = mockServices.filter(service => 

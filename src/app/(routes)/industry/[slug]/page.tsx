@@ -7,9 +7,9 @@ import { ServiceCard } from '@/components/cards/service-card'
 import { SearchBarLive } from '@/components/search/search-bar-live'
 
 interface IndustryPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export async function generateStaticParams() {
@@ -30,7 +30,8 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: IndustryPageProps): Promise<Metadata> {
   try {
-    const { industry } = await getIndustryData(params.slug)
+    const { slug } = await params
+    const { industry } = await getIndustryData(slug)
     return {
       title: `${industry.name}業界向けAIサービス | ${SITE_NAME}`,
       description: industry.description || `${industry.name}業界向けのAIサービス一覧。業務効率化に最適なソリューションを見つけましょう。`,
@@ -47,7 +48,8 @@ export const revalidate = 600
 
 export default async function IndustryPage({ params }: IndustryPageProps) {
   try {
-    const { industry, services } = await getIndustryData(params.slug)
+    const { slug } = await params
+    const { industry, services } = await getIndustryData(slug)
 
     if (!industry) {
       notFound()

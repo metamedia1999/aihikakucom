@@ -38,8 +38,8 @@ export function CaseStudiesSection() {
             <a key={caseStudy.id} href={`/case-studies/${caseStudy.id}`} className="case-study-card border rounded-md bg-white overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
               <div className="relative h-48">
                 <Image
-                  src={caseStudy.image}
-                  alt={caseStudy.title}
+                  src={caseStudy.image || '/placeholder.jpg'}
+                  alt={caseStudy.title || '導入事例画像'}
                   fill
                   className="object-cover"
                 />

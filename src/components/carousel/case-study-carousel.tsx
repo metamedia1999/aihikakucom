@@ -114,7 +114,7 @@ export function CaseStudyCarousel() {
                   <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded">
                     <Image
                       src={caseItem.logo || DEFAULT_LOGO}
-                      alt=""
+                      alt={caseItem.title || '事例ロゴ'}
                       fill
                       className="object-cover"
                       sizes="40px"

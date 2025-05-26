@@ -3,9 +3,9 @@ import { notFound } from 'next/navigation'
 import { MOCK_IMAGES } from '@/lib/constants'
 
 interface CaseStudyPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 const caseStudyData = {
@@ -45,8 +45,9 @@ const caseStudyData = {
   }
 }
 
-export default function CaseStudyPage({ params }: CaseStudyPageProps) {
-  const caseStudy = caseStudyData[params.id as keyof typeof caseStudyData]
+export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
+  const { id } = await params
+  const caseStudy = caseStudyData[id as keyof typeof caseStudyData]
 
   if (!caseStudy) {
     notFound()
@@ -73,12 +74,14 @@ export default function CaseStudyPage({ params }: CaseStudyPageProps) {
 
         {/* メイン画像 */}
         <div className="relative h-80 rounded-lg overflow-hidden mb-12">
-          <Image
-            src={caseStudy.image}
-            alt={caseStudy.title}
-            fill
-            className="object-cover"
-          />
+          {caseStudy.image && (
+            <Image
+              src={caseStudy.image || '/placeholder.svg'}
+              alt={caseStudy.title || 'ケーススタディ画像'}
+              fill
+              className="object-cover"
+            />
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">

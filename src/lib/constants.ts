@@ -28,19 +28,19 @@ export const FOOTER_LINKS = {
 };
 
 // デフォルト画像
-export const DEFAULT_FEATURED_IMAGE = 'https://placehold.co/1200x630/e2e8f0/1e293b?text=AI比較.com';
-export const DEFAULT_AVATAR = 'https://placehold.co/300x300/e2e8f0/1e293b?text=Avatar';
-export const DEFAULT_LOGO = 'https://placehold.co/200x200/e2e8f0/1e293b?text=Logo';
+export const DEFAULT_FEATURED_IMAGE = '/placeholder.svg';
+export const DEFAULT_AVATAR = '/placeholder.svg';
+export const DEFAULT_LOGO = '/placeholder.svg';
 
 // サービス画像（モック用）
 export const MOCK_IMAGES = {
   hero: 'https://images.unsplash.com/photo-1677442135132-141970ad6a2a?q=80&w=1632&auto=format&fit=crop',
-  service1: 'https://placehold.co/600x400/4f46e5/ffffff?text=AI+Assistant+Pro',
-  service2: 'https://placehold.co/600x400/10b981/ffffff?text=Smart+Data+Analyzer',
-  service3: 'https://placehold.co/600x400/ef4444/ffffff?text=AI+Document+Processor',
-  service4: 'https://placehold.co/600x400/f59e0b/ffffff?text=AI+Quality+Inspector',
-  service5: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Pharma+Research+AI',
-  service6: 'https://placehold.co/600x400/3b82f6/ffffff?text=Finance+Predict+AI',
+  service1: '/placeholder.svg',
+  service2: '/placeholder.svg',
+  service3: '/placeholder.svg',
+  service4: '/placeholder.svg',
+  service5: '/placeholder.svg',
+  service6: '/placeholder.svg',
   post1: 'https://images.unsplash.com/photo-1484417894907-623942c8ee29?q=80&w=1632&auto=format&fit=crop',
   post2: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1470&auto=format&fit=crop',
   post3: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1470&auto=format&fit=crop',

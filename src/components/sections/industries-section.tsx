@@ -42,8 +42,8 @@ export function IndustriesSection({ solutions = [] }: IndustriesSectionProps) {
             <Link key={industry.id} href={`/industry/${industry.slug}`}>
               <div className="industry-card relative h-48 rounded-md overflow-hidden group">
                 <Image
-                  src={industry.image}
-                  alt={industry.name}
+                  src={industry.image || '/placeholder.jpg'}
+                  alt={industry.name || '業界ソリューション画像'}
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />

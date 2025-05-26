@@ -63,7 +63,7 @@ export function ServiceCard({ service, featured = false }: ServiceCardProps) {
           <div className="relative h-12 w-12 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-lg bg-secondary/50">
             <Image
               src={logoUrl}
-              alt={title}
+              alt={title || 'サービスロゴ'}
               fill
               className="object-cover transition-transform duration-200 group-hover:scale-105"
               sizes="(max-width: 640px) 48px, 64px"

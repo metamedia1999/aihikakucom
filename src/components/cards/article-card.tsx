@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { formatDate, stripHtml } from '@/lib/utils'
+import { formatDate, stripHtml, truncateText } from '@/lib/utils'
 import { DEFAULT_FEATURED_IMAGE } from '@/lib/constants'
 import { Post } from '@/types'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
@@ -13,7 +13,18 @@ interface ArticleCardProps {
 }
 
 export function ArticleCard({ post, featured = false }: ArticleCardProps) {
-  console.log('ArticleCard rendering:', { title: post?.title, excerpt: post?.excerpt })
+  console.log('📄 ArticleCard rendering:', {
+    title: post?.title,
+    excerpt: post?.excerpt,
+    excerpt_type: typeof post?.excerpt,
+    excerpt_length: post?.excerpt?.length || 0,
+    has_html: post?.excerpt?.includes('<') || false
+  })
+  
+  if (!post) {
+    console.error('⚠️ ArticleCard: post is null/undefined')
+    return null
+  }
   
   const {
     slug,
@@ -25,6 +36,16 @@ export function ArticleCard({ post, featured = false }: ArticleCardProps) {
   } = post
 
   const imageUrl = featuredImage?.node?.sourceUrl || DEFAULT_FEATURED_IMAGE
+  
+  // excerptを安全に処理 - HTMLタグを除去してから省略
+  const cleanExcerpt = excerpt ? stripHtml(truncateText(excerpt, 150)) : ''
+  
+  console.log('🧩 ArticleCard excerpt processing:', {
+    original: excerpt,
+    cleaned: cleanExcerpt,
+    length_before: excerpt?.length || 0,
+    length_after: cleanExcerpt?.length || 0
+  })
 
   return (
     <Link href={`/blog/${slug}`}>
@@ -32,7 +53,7 @@ export function ArticleCard({ post, featured = false }: ArticleCardProps) {
         <div className="relative aspect-video w-full overflow-hidden">
           <Image
             src={imageUrl}
-            alt={title}
+            alt={title || '記事画像'}
             fill
             className="object-cover transition-transform duration-300 hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -57,7 +78,7 @@ export function ArticleCard({ post, featured = false }: ArticleCardProps) {
             </div>
           )}
 
-          <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{stripHtml(excerpt || '')}</p>
+          <p className="mt-2 text-sm text-muted-foreground line-clamp-2">{cleanExcerpt}</p>
         </CardContent>
 
         <CardFooter className="p-4 pt-0">
