@@ -533,7 +533,7 @@ export const GET_HOME_DATA = gql`
         }
       }
     }
-    posts(first: 10) {
+    posts(first: 100) {
       nodes {
         id
         slug
@@ -553,6 +553,10 @@ export const GET_HOME_DATA = gql`
             slug
           }
         }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
       }
     }
     categories(where: { hideEmpty: true }) {

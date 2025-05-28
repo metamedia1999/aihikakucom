@@ -76,7 +76,20 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // exportPathMap設定を削除
+  // CSPヘッダーを追加
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
+          }
+        ]
+      }
+    ]
+  }
 };
 
 export default nextConfig;

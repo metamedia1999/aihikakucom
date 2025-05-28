@@ -433,8 +433,13 @@ export async function getPosts(): Promise<Post[]> {
     
     // デバッグ用のログ出力
     console.log('=== getPosts Debug Info ===')
-    console.log('Posts array length:', homeData.posts?.length || 0)
+    console.log('Total posts fetched:', homeData.posts?.length || 0)
     console.log('First few posts:', homeData.posts?.slice(0, 3).map(p => ({
+      id: p.id,
+      title: p.title,
+      slug: p.slug
+    })))
+    console.log('Last few posts:', homeData.posts?.slice(-3).map(p => ({
       id: p.id,
       title: p.title,
       slug: p.slug
