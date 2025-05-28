@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { SITE_NAME } from '@/lib/constants'
 import { getPosts } from '@/lib/api/fetchers'
 import { Pagination } from '@/components/ui/pagination'
+import { stripHtml } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: `記事一覧 | ${SITE_NAME}`,
@@ -84,7 +85,7 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                           </Link>
                         </h2>
                         <p className="text-muted-foreground line-clamp-3 mb-4">
-                          {post.excerpt}
+                          {stripHtml(post.excerpt || '')}
                         </p>
                         {post.categories?.nodes && post.categories.nodes.length > 0 && (
                           <div className="flex flex-wrap gap-2 mb-4">

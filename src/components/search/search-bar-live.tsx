@@ -8,6 +8,7 @@ import { Service } from '@/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import { DEFAULT_LOGO } from '@/lib/constants'
+import { stripHtml } from '@/lib/utils'
 
 // プレースホルダーのローテーション用テキスト
 const PLACEHOLDER_TEXTS = [
@@ -164,7 +165,7 @@ export function SearchBarLive() {
                     </div>
                     <div>
                       <div className="font-medium">{item.title}</div>
-                      <div className="text-xs text-muted-foreground line-clamp-1">{item.excerpt}</div>
+                      <div className="text-xs text-muted-foreground line-clamp-1">{stripHtml(item.excerpt || '')}</div>
                     </div>
                   </button>
                 </li>

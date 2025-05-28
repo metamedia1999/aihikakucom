@@ -32,10 +32,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     return {
       title: service.title,
-      description: service.excerpt,
+      description: stripHtml(service.excerpt || ''),
       openGraph: {
         title: `${service.title} | ${SITE_NAME}`,
-        description: service.excerpt,
+        description: stripHtml(service.excerpt || ''),
         images: service.featuredImage?.node?.sourceUrl
           ? [{ url: service.featuredImage.node.sourceUrl }]
           : undefined,
