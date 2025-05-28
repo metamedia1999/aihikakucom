@@ -2,17 +2,39 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { SITE_NAME } from '@/lib/constants'
 import { getPosts } from '@/lib/api/fetchers'
+import { Pagination } from '@/components/ui/pagination'
 
 export const metadata: Metadata = {
   title: `記事一覧 | ${SITE_NAME}`,
   description: 'AI活用やBPOに関する最新記事。導入事例や活用のポイントなど、役立つ情報をお届けします。',
 }
 
+export const dynamic = 'force-dynamic'
 export const revalidate = 600
 
-export default async function BlogPage() {
+const POSTS_PER_PAGE = 12
+
+interface BlogPageProps {
+  searchParams: Promise<{ page?: string }>
+}
+
+export default async function BlogPage({ searchParams }: BlogPageProps) {
   try {
     const posts = await getPosts()
+    
+    // searchParamsを待機
+    const params = await searchParams
+    
+    // 現在のページ番号を取得（デフォルトは1）
+    const currentPage = Number(params.page) || 1
+    
+    // 総ページ数を計算
+    const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
+    
+    // 現在のページに表示する記事を抽出
+    const startIndex = (currentPage - 1) * POSTS_PER_PAGE
+    const endIndex = startIndex + POSTS_PER_PAGE
+    const currentPosts = posts.slice(startIndex, endIndex)
 
     return (
       <div className="container-wide py-12">
@@ -24,55 +46,64 @@ export default async function BlogPage() {
             </p>
           </div>
 
-          {posts && posts.length > 0 ? (
-            <div className="grid gap-8">
-              {posts.map((post) => (
-                <article key={post.id} className="bg-background rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border">
-                  <div className="md:flex">
-                    {post.featuredImage?.node?.sourceUrl && (
-                      <div className="md:w-1/3 aspect-video md:aspect-square">
-                        <img
-                          src={post.featuredImage.node.sourceUrl}
-                          alt={post.title}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
-                    <div className="md:w-2/3 p-6">
-                      <div className="text-sm text-muted-foreground mb-2">
-                        {new Date(post.date).toLocaleDateString('ja-JP')}
-                      </div>
-                      <h2 className="text-xl font-semibold mb-3 line-clamp-2">
-                        <Link href={`/blog/${post.slug}`} className="hover:text-primary">
-                          {post.title}
-                        </Link>
-                      </h2>
-                      <p className="text-muted-foreground line-clamp-3 mb-4">
-                        {post.excerpt}
-                      </p>
-                      {post.categories?.nodes && post.categories.nodes.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {post.categories.nodes.map((category) => (
-                            <span
-                              key={category.id}
-                              className="px-2 py-1 bg-secondary text-xs rounded-md"
-                            >
-                              {category.name}
-                            </span>
-                          ))}
+          {currentPosts && currentPosts.length > 0 ? (
+            <>
+              <div className="grid gap-8">
+                {currentPosts.map((post) => (
+                  <article key={post.id} className="bg-background rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border">
+                    <div className="md:flex">
+                      {post.featuredImage?.node?.sourceUrl && (
+                        <div className="md:w-1/3 aspect-video md:aspect-square">
+                          <img
+                            src={post.featuredImage.node.sourceUrl}
+                            alt={post.title}
+                            className="w-full h-full object-cover"
+                          />
                         </div>
                       )}
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        className="text-primary hover:underline text-sm font-medium"
-                      >
-                        続きを読む →
-                      </Link>
+                      <div className="md:w-2/3 p-6">
+                        <div className="text-sm text-muted-foreground mb-2">
+                          {new Date(post.date).toLocaleDateString('ja-JP')}
+                        </div>
+                        <h2 className="text-xl font-semibold mb-3 line-clamp-2">
+                          <Link href={`/blog/${post.slug}`} className="hover:text-primary">
+                            {post.title}
+                          </Link>
+                        </h2>
+                        <p className="text-muted-foreground line-clamp-3 mb-4">
+                          {post.excerpt}
+                        </p>
+                        {post.categories?.nodes && post.categories.nodes.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            {post.categories.nodes.map((category) => (
+                              <span
+                                key={category.id}
+                                className="px-2 py-1 bg-secondary text-xs rounded-md"
+                              >
+                                {category.name}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        <Link
+                          href={`/blog/${post.slug}`}
+                          className="text-primary hover:underline text-sm font-medium"
+                        >
+                          続きを読む →
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+                  </article>
+                ))}
+              </div>
+              
+              {/* ページネーション */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                basePath="/blog"
+              />
+            </>
           ) : (
             <div className="text-center py-12">
               <div className="max-w-md mx-auto">

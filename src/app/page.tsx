@@ -142,7 +142,7 @@ export default async function HomePage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {posts.slice(0, 3).map((post) => (
+                {posts.slice(0, 6).map((post) => (
                   <div key={post.id} className="bg-background rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                     {post.featuredImage?.node?.sourceUrl && (
                       <div className="aspect-video relative overflow-hidden">
