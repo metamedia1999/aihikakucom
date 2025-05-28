@@ -430,12 +430,29 @@ export async function getPosts(): Promise<Post[]> {
   
   try {
     const homeData = await getHomeData()
+    
+    // デバッグ用のログ出力
+    console.log('=== getPosts Debug Info ===')
+    console.log('Posts array length:', homeData.posts?.length || 0)
+    console.log('First few posts:', homeData.posts?.slice(0, 3).map(p => ({
+      id: p.id,
+      title: p.title,
+      slug: p.slug
+    })))
+    console.log('==========================')
+    
     return homeData.posts
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
       console.error('Error fetching posts:', error)
     }
     const mockData = getMockHomeData()
+    
+    // モックデータのデバッグログ
+    console.log('=== getPosts Mock Data Debug ===')
+    console.log('Mock posts length:', mockData.posts?.length || 0)
+    console.log('================================')
+    
     return mockData.posts
   }
 }

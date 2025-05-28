@@ -31,10 +31,23 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
     // 総ページ数を計算
     const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
     
+    // デバッグ用のログ出力
+    console.log('=== Blog Page Debug Info ===')
+    console.log('Total posts fetched:', posts.length)
+    console.log('Posts per page:', POSTS_PER_PAGE)
+    console.log('Current page:', currentPage)
+    console.log('Total pages:', totalPages)
+    console.log('Start index:', (currentPage - 1) * POSTS_PER_PAGE)
+    console.log('End index:', (currentPage - 1) * POSTS_PER_PAGE + POSTS_PER_PAGE)
+    
     // 現在のページに表示する記事を抽出
     const startIndex = (currentPage - 1) * POSTS_PER_PAGE
     const endIndex = startIndex + POSTS_PER_PAGE
     const currentPosts = posts.slice(startIndex, endIndex)
+    
+    console.log('Current posts to display:', currentPosts.length)
+    console.log('Should show pagination?', totalPages > 1)
+    console.log('===========================')
 
     return (
       <div className="container-wide py-12">
@@ -98,11 +111,16 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
               </div>
               
               {/* ページネーション */}
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                basePath="/blog"
-              />
+              <div className="mt-8">
+                <div className="text-xs text-muted-foreground mb-2">
+                  ページ {currentPage} / {totalPages} (全{posts.length}件)
+                </div>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  basePath="/blog"
+                />
+              </div>
             </>
           ) : (
             <div className="text-center py-12">

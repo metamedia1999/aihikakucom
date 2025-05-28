@@ -13,6 +13,14 @@ interface PaginationProps {
 export function Pagination({ currentPage, totalPages, basePath }: PaginationProps) {
   const searchParams = useSearchParams()
   
+  // デバッグ用のログ出力
+  console.log('=== Pagination Component Debug ===')
+  console.log('currentPage:', currentPage)
+  console.log('totalPages:', totalPages)
+  console.log('basePath:', basePath)
+  console.log('Should render pagination?', totalPages > 1)
+  console.log('================================')
+  
   // URLクエリパラメータを維持しながらページ番号を変更
   const createPageUrl = (page: number) => {
     const params = new URLSearchParams(searchParams)
