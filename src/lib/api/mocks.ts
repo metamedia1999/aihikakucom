@@ -481,6 +481,177 @@ export const mockPosts: Post[] = [
         { id: 'cat-2', name: 'ビジネス活用', slug: 'business-use' }
       ]
     }
+  },
+  // Additional posts for pagination testing
+  {
+    id: 'post-4',
+    slug: 'ai-customer-service',
+    title: 'AIカスタマーサービスの最前線：顧客満足度を向上させる活用術',
+    excerpt: 'AIを活用したカスタマーサービスの最新トレンドと導入事例を紹介します。',
+    content: `<h2>AIがカスタマーサービスを変える</h2><p>詳細な内容...</p>`,
+    date: '2025-03-30T10:00:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post1 } },
+    categories: { nodes: [{ id: 'cat-3', name: 'カスタマーサービス', slug: 'customer-service' }] }
+  },
+  {
+    id: 'post-5',
+    slug: 'data-analysis-with-ai',
+    title: 'ビッグデータ×AI：データドリブン経営の実現方法',
+    excerpt: 'AIを活用したデータ分析で経営判断を高度化する方法を解説します。',
+    content: `<h2>データドリブン経営とは</h2><p>詳細な内容...</p>`,
+    date: '2025-03-25T11:00:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post2 } },
+    categories: { nodes: [{ id: 'cat-6', name: 'データ分析', slug: 'data-analysis' }] }
+  },
+  {
+    id: 'post-6',
+    slug: 'ai-security-measures',
+    title: 'AI導入におけるセキュリティ対策：リスクと対応策',
+    excerpt: 'AI活用に伴うセキュリティリスクと効果的な対策方法を詳しく解説します。',
+    content: `<h2>AIセキュリティの重要性</h2><p>詳細な内容...</p>`,
+    date: '2025-03-20T09:30:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post3 } },
+    categories: { nodes: [{ id: 'cat-7', name: 'セキュリティ', slug: 'security' }] }
+  },
+  {
+    id: 'post-7',
+    slug: 'ai-manufacturing-innovation',
+    title: '製造業におけるAI活用：品質管理から生産最適化まで',
+    excerpt: '製造現場でのAI活用事例と導入効果を具体的に紹介します。',
+    content: `<h2>製造業のAI革新</h2><p>詳細な内容...</p>`,
+    date: '2025-03-15T14:00:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post1 } },
+    categories: { nodes: [{ id: 'cat-8', name: '製造業', slug: 'manufacturing' }] }
+  },
+  {
+    id: 'post-8',
+    slug: 'ai-healthcare-revolution',
+    title: '医療分野のAI革新：診断支援から創薬まで',
+    excerpt: '医療・ヘルスケア分野でのAI活用最新動向と可能性を探ります。',
+    content: `<h2>医療AIの現在と未来</h2><p>詳細な内容...</p>`,
+    date: '2025-03-10T10:30:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post2 } },
+    categories: { nodes: [{ id: 'cat-9', name: '医療・ヘルスケア', slug: 'healthcare' }] }
+  },
+  {
+    id: 'post-9',
+    slug: 'ai-finance-transformation',
+    title: '金融業界のAI活用：リスク管理から顧客サービスまで',
+    excerpt: '金融機関におけるAI活用の現状と今後の展望を解説します。',
+    content: `<h2>金融AIの可能性</h2><p>詳細な内容...</p>`,
+    date: '2025-03-05T13:00:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post3 } },
+    categories: { nodes: [{ id: 'cat-10', name: '金融', slug: 'finance' }] }
+  },
+  {
+    id: 'post-10',
+    slug: 'ai-education-future',
+    title: '教育分野のAI活用：個別最適化学習の実現',
+    excerpt: 'AIが教育にもたらす変革と新しい学習体験について紹介します。',
+    content: `<h2>教育×AIの未来</h2><p>詳細な内容...</p>`,
+    date: '2025-02-28T11:30:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post1 } },
+    categories: { nodes: [{ id: 'cat-11', name: '教育', slug: 'education' }] }
+  },
+  {
+    id: 'post-11',
+    slug: 'ai-retail-innovation',
+    title: '小売業界のAI活用：需要予測から接客まで',
+    excerpt: '小売・流通業界でのAI活用事例と成功のポイントを解説します。',
+    content: `<h2>小売業のAI戦略</h2><p>詳細な内容...</p>`,
+    date: '2025-02-25T09:00:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post2 } },
+    categories: { nodes: [{ id: 'cat-12', name: '小売・流通', slug: 'retail' }] }
+  },
+  {
+    id: 'post-12',
+    slug: 'ai-logistics-optimization',
+    title: '物流・配送のAI最適化：効率化と省人化の実現',
+    excerpt: '物流業界でのAI活用による効率化事例を紹介します。',
+    content: `<h2>物流AIの威力</h2><p>詳細な内容...</p>`,
+    date: '2025-02-20T14:30:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post3 } },
+    categories: { nodes: [{ id: 'cat-13', name: '物流', slug: 'logistics' }] }
+  },
+  {
+    id: 'post-13',
+    slug: 'ai-hr-management',
+    title: 'AI人事管理：採用から育成まで人材戦略の革新',
+    excerpt: '人事・HR分野でのAI活用方法と導入事例を詳しく解説します。',
+    content: `<h2>人事AIの可能性</h2><p>詳細な内容...</p>`,
+    date: '2025-02-15T10:00:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post1 } },
+    categories: { nodes: [{ id: 'cat-14', name: '人事・HR', slug: 'hr' }] }
+  },
+  {
+    id: 'post-14',
+    slug: 'ai-marketing-automation',
+    title: 'AIマーケティング自動化：効果的な顧客エンゲージメント',
+    excerpt: 'AIを活用したマーケティング自動化の最新手法と成功事例を紹介します。',
+    content: `<h2>マーケティングAIの進化</h2><p>詳細な内容...</p>`,
+    date: '2025-02-10T11:00:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post2 } },
+    categories: { nodes: [{ id: 'cat-15', name: 'マーケティング', slug: 'marketing' }] }
+  },
+  {
+    id: 'post-15',
+    slug: 'ai-legal-tech',
+    title: 'リーガルテックのAI活用：契約書レビューから法務業務効率化まで',
+    excerpt: '法務分野でのAI活用による業務効率化の実例を解説します。',
+    content: `<h2>法務AIの実力</h2><p>詳細な内容...</p>`,
+    date: '2025-02-05T09:30:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post3 } },
+    categories: { nodes: [{ id: 'cat-16', name: '法務', slug: 'legal' }] }
+  },
+  {
+    id: 'post-16',
+    slug: 'ai-agriculture-tech',
+    title: '農業×AI：スマート農業の最前線',
+    excerpt: '農業分野でのAI活用による生産性向上と持続可能な農業の実現方法を紹介します。',
+    content: `<h2>農業AIの革新</h2><p>詳細な内容...</p>`,
+    date: '2025-01-30T13:00:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post1 } },
+    categories: { nodes: [{ id: 'cat-17', name: '農業', slug: 'agriculture' }] }
+  },
+  {
+    id: 'post-17',
+    slug: 'ai-real-estate',
+    title: '不動産業界のAI活用：価格査定から物件マッチングまで',
+    excerpt: '不動産分野でのAI活用事例と今後の展望を解説します。',
+    content: `<h2>不動産AIの可能性</h2><p>詳細な内容...</p>`,
+    date: '2025-01-25T10:30:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post2 } },
+    categories: { nodes: [{ id: 'cat-18', name: '不動産', slug: 'real-estate' }] }
+  },
+  {
+    id: 'post-18',
+    slug: 'ai-energy-management',
+    title: 'エネルギー管理のAI活用：最適化と省エネの実現',
+    excerpt: 'エネルギー分野でのAI活用による効率化と環境負荷低減の方法を紹介します。',
+    content: `<h2>エネルギーAIの威力</h2><p>詳細な内容...</p>`,
+    date: '2025-01-20T14:00:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post3 } },
+    categories: { nodes: [{ id: 'cat-19', name: 'エネルギー', slug: 'energy' }] }
+  },
+  {
+    id: 'post-19',
+    slug: 'ai-tourism-hospitality',
+    title: '観光・ホスピタリティ業界のAI活用：顧客体験の向上',
+    excerpt: '観光・サービス業でのAI活用による顧客満足度向上の事例を解説します。',
+    content: `<h2>観光AIの未来</h2><p>詳細な内容...</p>`,
+    date: '2025-01-15T11:30:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post1 } },
+    categories: { nodes: [{ id: 'cat-20', name: '観光・サービス', slug: 'tourism' }] }
+  },
+  {
+    id: 'post-20',
+    slug: 'ai-construction-tech',
+    title: '建設業界のAI活用：設計最適化から現場管理まで',
+    excerpt: '建設・建築分野でのAI活用による生産性向上と安全性確保の方法を紹介します。',
+    content: `<h2>建設AIの革新</h2><p>詳細な内容...</p>`,
+    date: '2025-01-10T09:00:00Z',
+    featuredImage: { node: { sourceUrl: MOCK_IMAGES.post2 } },
+    categories: { nodes: [{ id: 'cat-21', name: '建設・建築', slug: 'construction' }] }
   }
 ];
 
