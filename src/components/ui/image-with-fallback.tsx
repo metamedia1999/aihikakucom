@@ -56,7 +56,7 @@ export function ImageWithFallback({
     const gradient = getGradientFallback(gradientSeed || alt)
     return (
       <div 
-        className={`relative ${className}`}
+        className={`relative ${fill ? 'h-full w-full' : ''} ${className}`}
         style={{ background: gradient }}
       >
         <div className="absolute inset-0 flex items-center justify-center">
@@ -69,7 +69,7 @@ export function ImageWithFallback({
   }
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${fill ? 'h-full w-full' : ''} ${className}`}>
       {isLoading && (
         <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-purple-100 animate-pulse rounded" />
       )}

@@ -1,0 +1,53 @@
+
+> nextjs-shadcn@0.1.0 build
+> next build
+
+   ▲ Next.js 15.3.2
+   - Environments: .env.local
+   - Experiments (use with caution):
+     ✓ optimizeCss
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 9.0s
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+   Generating static pages (0/18) ...
+   Generating static pages (4/18) 
+   Generating static pages (8/18) 
+   Generating static pages (13/18) 
+ ✓ Generating static pages (18/18)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                    Size  First Load JS
+┌ ƒ /                                        5.9 kB         185 kB
+├ ƒ /_not-found                               149 B         101 kB
+├ ƒ /api/contact                              149 B         101 kB
+├ ƒ /api/diagnosis                            149 B         101 kB
+├ ƒ /blog                                   3.28 kB         121 kB
+├ ● /blog/[slug]                            2.55 kB         120 kB
+├   ├ /blog/ai-kakushin-jidai
+├   ├ /blog/dx-senryaku-guide
+├   ├ /blog/cloud-migration-best-practices
+├   └ /blog/security-compliance-2024
+├ ƒ /case-studies-case-1                    2.55 kB         120 kB
+├ ƒ /case-studies/[id]                        184 B         110 kB
+├ ƒ /contact                                2.51 kB         164 kB
+├ ● /industry/[slug]                        2.52 kB         182 kB
+├   ├ /industry/finance
+├   ├ /industry/pharma
+├   └ /industry/manufacturing
+├ ƒ /search                                 1.43 kB         186 kB
+├ ƒ /service/[slug]                         2.55 kB         120 kB
+├ ƒ /services                                 210 B         184 kB
+└ ƒ /thankyou                               2.83 kB         177 kB
++ First Load JS shared by all                101 kB
+  ├ chunks/4bd1b696-53149b7f93fecf53.js     53.2 kB
+  ├ chunks/684-7e12299a8d9f9482.js          45.8 kB
+  └ other shared chunks (total)             1.92 kB
+
+
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

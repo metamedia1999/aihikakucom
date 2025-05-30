@@ -27,7 +27,8 @@ export function ArticleCard({ post, featured = false }: ArticleCardProps) {
     categories,
   } = post
 
-  const imageUrl = getArticleImage(post as unknown as Record<string, unknown>)
+  // Use the same direct approach as the blog detail page
+  const imageUrl = featuredImage?.node?.sourceUrl || getArticleImage(post as unknown as Record<string, unknown>)
   
   // excerptを安全に処理 - HTMLタグを除去してから省略
   const cleanExcerpt = excerpt ? stripHtml(truncateText(excerpt, 150)) : ''
