@@ -145,6 +145,17 @@
   .snap-center {
     scroll-snap-align: center;
   }
+  
+  /* 比較テーブルのスティッキー列サポート */
+  .comparison-table-wrapper {
+    position: relative;
+  }
+  
+  /* スティッキー列の背景確保 */
+  .sticky {
+    position: sticky !important;
+    background-color: inherit;
+  }
 }
 
 /* 日本語フォント設定 */

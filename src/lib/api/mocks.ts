@@ -689,18 +689,64 @@ export function getMockIndustryData(slug: string) {
   const industry = mockIndustries.find(i => i.slug === slug);
   
   if (!industry) {
-    console.warn(`Industry with slug ${slug} not found, returning default industry data`);
-    const defaultIndustry = mockIndustries[0];
-    const defaultServices = mockServices.slice(0, 3);
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`Creating fallback industry data for: ${slug}`);
+    }
+    
+    // より詳細な業界名マッピング
+    const industryNameMap: Record<string, { name: string; description: string; }> = {
+      'finance': {
+        name: '金融',
+        description: '金融業界向けのAIソリューション。リスク分析、投資判断、顧客サービスの向上を実現する最新のAI技術をご提供します。'
+      },
+      'pharma': {
+        name: '製薬',
+        description: '製薬業界向けのAIソリューション。創薬研究、臨床試験、品質管理の効率化を支援する専門的なAI技術をご提供します。'
+      },
+      'manufacturing': {
+        name: '製造業',
+        description: '製造業向けのAIソリューション。品質検査、生産最適化、予知保全による生産性向上をサポートします。'
+      },
+      'healthcare': {
+        name: '医療・ヘルスケア',
+        description: '医療・ヘルスケア業界向けのAIソリューション。診断支援、患者ケア、医療業務の効率化を実現します。'
+      },
+      'retail': {
+        name: '小売・流通',
+        description: '小売・流通業界向けのAIソリューション。需要予測、在庫最適化、顧客体験の向上をサポートします。'
+      },
+      'logistics': {
+        name: '物流',
+        description: '物流業界向けのAIソリューション。配送最適化、倉庫管理、需要予測による効率化を実現します。'
+      },
+      'education': {
+        name: '教育',
+        description: '教育業界向けのAIソリューション。個別最適化学習、学習分析、教育業務の効率化をサポートします。'
+      }
+    };
+    
+    const industryInfo = industryNameMap[slug] || {
+      name: slug.charAt(0).toUpperCase() + slug.slice(1),
+      description: `${slug}業界向けのAIソリューション一覧。業務効率化と生産性向上を実現する最新のAI技術をご紹介します。`
+    };
+    
+    // 汎用的に使えるサービスを選択（業界に関係なく使える AI Assistant Pro など）
+    const universalServices = mockServices.filter(service => 
+      service.slug === 'ai-assistant-pro' || 
+      service.slug === 'smart-data-analyzer' || 
+      service.slug === 'ai-document-processor'
+    );
+    
+    const fallbackIndustry = {
+      id: `industry-${slug}`,
+      slug: slug,
+      name: industryInfo.name,
+      description: industryInfo.description
+    };
     
     return {
-      industry: JSON.parse(JSON.stringify({
-        ...defaultIndustry,
-        slug: slug,
-        name: `業界ソリューション (${slug})`,
-        description: `${slug}向けのAIソリューションを提供します。`
-      })),
-      services: JSON.parse(JSON.stringify(defaultServices))
+      industry: JSON.parse(JSON.stringify(fallbackIndustry)),
+      services: JSON.parse(JSON.stringify(universalServices))
     };
   }
 
@@ -746,8 +792,8 @@ export function mockSearchContent(searchTerm: string): SearchResult {
   
   const filteredServices = mockServices.filter(service => 
     service.title.toLowerCase().includes(term) || 
-    service.excerpt.toLowerCase().includes(term) ||
-    service.content.toLowerCase().includes(term) ||
+    (service.excerpt || '').toLowerCase().includes(term) ||
+    (service.content || '').toLowerCase().includes(term) ||
     service.industries?.nodes.some(i => i.name.toLowerCase().includes(term))
   );
   
@@ -840,38 +886,26 @@ export function getMockCaseStudies() {
   ];
 }
 
-// 業界別ソリューション用モックデータ
+// 業界別ソリューション用モックデータ（サービス数付き）
 export function getMockIndustrySolutions() {
-  return [
-    {
-      id: 'solution-1',
-      slug: 'retail-ai-solution',
-      title: '小売業向けAIソリューション',
-      content: '小売業界に特化したAI活用で売上向上と業務効率化を実現',
-      featuredImage: { node: { sourceUrl: MOCK_IMAGES.industry1, altText: '小売業AIソリューション' } },
-      industrySolutionFields: {
-        targetIndustry: '小売業',
-        problemsToSolve: ['在庫管理の最適化', '需要予測の精度向上', 'カスタマーサービスの効率化'],
-        recommendedServices: ['AI需要予測ツール', 'チャットボット', '画像認識システム'],
-        expectedBenefits: ['売上15%向上', '在庫コスト20%削減', '顧客満足度向上'],
-        implementationTime: '3-6ヶ月'
-      }
-    },
-    {
-      id: 'solution-2',
-      slug: 'manufacturing-ai-solution',
-      title: '製造業向けAIソリューション',
-      content: '製造業の品質管理と生産効率向上を支援するAIソリューション',
-      featuredImage: { node: { sourceUrl: MOCK_IMAGES.industry2, altText: '製造業AIソリューション' } },
-      industrySolutionFields: {
-        targetIndustry: '製造業',
-        problemsToSolve: ['品質検査の精度向上', '予知保全の実現', '生産計画の最適化'],
-        recommendedServices: ['AI画像認識', '予知保全システム', '生産管理AI'],
-        expectedBenefits: ['不良品率30%削減', '設備稼働率向上', '生産効率20%向上'],
-        implementationTime: '6-12ヶ月'
-      }
-    }
-  ];
+  // 各業界のサービス数を計算
+  const industryServiceCounts = mockIndustries.map(industry => {
+    const serviceCount = mockServices.filter(service =>
+      service.industries?.nodes.some(i => i.slug === industry.slug)
+    ).length;
+    
+    return {
+      id: industry.id,
+      slug: industry.slug,
+      name: industry.name,
+      description: industry.description,
+      serviceCount: serviceCount,
+      image: MOCK_IMAGES[`industry${mockIndustries.indexOf(industry) + 1}`] || MOCK_IMAGES.industry1
+    };
+  });
+  
+  // サービスが1件以上ある業界のみを返す
+  return industryServiceCounts.filter(industry => industry.serviceCount > 0);
 }
 
 // 単一ケーススタディ取得用モック

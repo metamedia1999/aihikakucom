@@ -26,11 +26,11 @@ export interface Service {
   serviceDetail?: {
     price?: string;
     serviceSummary?: string;
-    aiUtilization?: string;
-    effectiveness?: string;
-    supportLevel?: string;
+    aiUtilization?: string | number;
+    effectiveness?: string | number;
+    supportLevel?: string | number;
     industryCategory?: string;
-    transparencyScore?: string;
+    transparencyScore?: string | number;
     logo?: {
       node: {
         sourceUrl: string;

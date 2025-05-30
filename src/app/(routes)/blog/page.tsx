@@ -3,7 +3,8 @@ import Link from 'next/link'
 import { SITE_NAME } from '@/lib/constants'
 import { getPosts } from '@/lib/api/fetchers'
 import { Pagination } from '@/components/ui/pagination'
-import { stripHtml } from '@/lib/utils'
+import { stripHtml, getArticleImage } from '@/lib/utils'
+import { ImageWithFallback } from '@/components/ui/image-with-fallback'
 
 export const metadata: Metadata = {
   title: `記事一覧 | ${SITE_NAME}`,
@@ -66,15 +67,16 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
                 {currentPosts.map((post) => (
                   <article key={post.id} className="bg-background rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border">
                     <div className="md:flex">
-                      {post.featuredImage?.node?.sourceUrl && (
-                        <div className="md:w-1/3 aspect-video md:aspect-square">
-                          <img
-                            src={post.featuredImage.node.sourceUrl}
-                            alt={post.title}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      )}
+                      <div className="md:w-1/3 aspect-video md:aspect-square relative">
+                        <ImageWithFallback
+                          src={getArticleImage(post)}
+                          alt={post.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                          fallbackType="article"
+                        />
+                      </div>
                       <div className="md:w-2/3 p-6">
                         <div className="text-sm text-muted-foreground mb-2">
                           {new Date(post.date).toLocaleDateString('ja-JP')}

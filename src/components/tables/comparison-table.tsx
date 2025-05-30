@@ -1,6 +1,7 @@
 'use client'
 
 import { Check, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 // モック比較データ
 const MOCK_COMPARISON_DATA = {
@@ -23,9 +24,24 @@ interface ComparisonTableProps {
 }
 
 export function ComparisonTable({ tableId = 'compare' }: ComparisonTableProps) {
+  const [isLoading, setIsLoading] = useState(true)
+  
+  useEffect(() => {
+    // データ読み込みのシミュレーション
+    setIsLoading(false)
+  }, [])
+  
   // 実際の実装ではWordPressのTablePressからデータを取得
   // ここではモックデータを使用
   const { headers, rows } = MOCK_COMPARISON_DATA
+  
+  if (isLoading) {
+    return (
+      <div className="w-full p-8 text-center">
+        <p className="text-muted-foreground">比較表を読み込み中...</p>
+      </div>
+    )
+  }
 
   // bool値をアイコンで表示するヘルパー関数
   const renderBoolValue = (value: boolean | string) => {
@@ -40,41 +56,55 @@ export function ComparisonTable({ tableId = 'compare' }: ComparisonTableProps) {
   }
 
   return (
-    <div className="overflow-x-auto snap-x">
-      <table className="w-full border-collapse">
-        <thead>
-          <tr>
-            {headers.map((header, index) => (
-              <th
-                key={index}
-                className={`
-                  p-3 bg-secondary text-sm font-medium text-left border-b
-                  ${index === 0 ? 'sticky left-0 z-10 bg-secondary/95 min-w-40' : 'text-center'}
-                `}
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, rowIndex) => (
-            <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-white' : 'bg-secondary/20'}>
-              {row.map((cell, cellIndex) => (
-                <td
-                  key={cellIndex}
+    <div className="w-full overflow-hidden rounded-lg border">
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="border-b bg-muted/50">
+              {headers.map((header, index) => (
+                <th
+                  key={index}
                   className={`
-                    p-3 border-b text-sm
-                    ${cellIndex === 0 ? 'sticky left-0 z-10 font-medium bg-inherit' : 'text-center'}
+                    whitespace-nowrap px-4 py-3 text-sm font-semibold
+                    ${index === 0 
+                      ? 'sticky left-0 z-10 bg-muted/50 text-left min-w-[140px] after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-border' 
+                      : 'text-center min-w-[120px]'
+                    }
                   `}
                 >
-                  {cellIndex === 0 ? cell : renderBoolValue(cell)}
-                </td>
+                  {header}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {rows.map((row, rowIndex) => (
+              <tr 
+                key={rowIndex} 
+                className={`
+                  border-b transition-colors hover:bg-muted/50
+                  ${rowIndex % 2 === 0 ? 'bg-background' : 'bg-muted/20'}
+                `}
+              >
+                {row.map((cell, cellIndex) => (
+                  <td
+                    key={cellIndex}
+                    className={`
+                      whitespace-nowrap px-4 py-3 text-sm
+                      ${cellIndex === 0 
+                        ? 'sticky left-0 z-10 font-medium bg-inherit after:absolute after:right-0 after:top-0 after:h-full after:w-px after:bg-border' 
+                        : 'text-center'
+                      }
+                    `}
+                  >
+                    {cellIndex === 0 ? cell : renderBoolValue(cell)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

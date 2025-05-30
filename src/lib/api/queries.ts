@@ -693,7 +693,7 @@ export const SEARCH_QUERY = gql`
   }
 `
 
-// 業界ページ用クエリ
+// 業界ページ用クエリ（カテゴリー情報のみ）
 export const GET_INDUSTRY_DATA = gql`
   query GetIndustryData($slug: ID!) {
     category(id: $slug, idType: SLUG) {
@@ -701,27 +701,58 @@ export const GET_INDUSTRY_DATA = gql`
       slug
       name
       description
-      posts {
-        nodes {
-          id
-          slug
-          title
-          excerpt
-          content
-          featuredImage {
+    }
+  }
+`
+
+// 全サービス取得用クエリ（クライアント側でフィルタリング）
+export const GET_ALL_SERVICES = gql`
+  query GetAllServices {
+    allService(first: 100) {
+      nodes {
+        id
+        slug
+        title
+        excerpt
+        content
+        featuredImage {
+          node {
+            sourceUrl
+          }
+        }
+        serviceDetail {
+          price
+          serviceSummary
+          logo {
             node {
               sourceUrl
             }
           }
-          categories {
-            nodes {
-              id
-              slug
-              name
-            }
+        }
+        industries {
+          nodes {
+            id
+            slug
+            name
           }
         }
       }
     }
   }
 `
+
+// 業界一覧取得用クエリ（サービス数を取得するためにはカテゴリごとに別途クエリが必要）
+export const GET_INDUSTRIES_LIST = gql`
+  query GetIndustriesList {
+    categories(where: { hideEmpty: false }) {
+      nodes {
+        id
+        slug
+        name
+        description
+        count
+      }
+    }
+  }
+`
+

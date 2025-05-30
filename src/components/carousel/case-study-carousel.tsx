@@ -78,13 +78,13 @@ export function CaseStudyCarousel() {
   }, [])
 
   const handlePrev = () => {
-    if (swiperEl) {
+    if (swiperEl && swiperEl.swiper) {
       swiperEl.swiper.slidePrev()
     }
   }
 
   const handleNext = () => {
-    if (swiperEl) {
+    if (swiperEl && swiperEl.swiper) {
       swiperEl.swiper.slideNext()
     }
   }

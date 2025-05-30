@@ -89,6 +89,16 @@ const nextConfig = {
         ]
       }
     ]
+  },
+  // リダイレクト設定
+  async redirects() {
+    return [
+      {
+        source: '/case-studies/case-1',
+        destination: '/case-studies-case-1',
+        permanent: true,
+      },
+    ]
   }
 };
 

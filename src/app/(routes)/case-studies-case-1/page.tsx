@@ -1,57 +1,28 @@
-import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { MOCK_IMAGES } from '@/lib/constants'
+import { ImageWithFallback } from '@/components/ui/image-with-fallback'
 
-interface CaseStudyPageProps {
-  params: Promise<{
-    id: string
-  }>
-}
-
+// Case study data
 const caseStudyData = {
-  'case-1': {
-    id: 'case-1',
-    title: '株式会社ABCの業務効率化事例',
-    company: '株式会社ABC',
-    industry: '小売',
-    description: 'AIアシスタントの導入により、カスタマーサポート業務の対応時間を50%削減。顧客満足度も15%向上しました。',
-    image: MOCK_IMAGES.case1,
-    challenge: '従来のカスタマーサポートでは、問い合わせ対応に多くの時間を要し、担当者の負荷が高い状況でした。また、営業時間外の対応ができないため、顧客満足度に課題がありました。',
-    solution: 'ChatGPTベースのAIアシスタントを導入し、よくある質問への自動応答システムを構築。24時間365日の対応を実現し、複雑な問い合わせのみ人間のオペレーターが対応する体制に変更しました。',
-    results: [
-      '問い合わせ対応時間: 50%削減',
-      '顧客満足度: 15%向上',
-      '営業時間外対応率: 100%実現',
-      'オペレーター負荷: 40%軽減'
-    ],
-    usedServices: ['ChatGPT API', 'AIチャットボット', 'カスタマーサポートAI']
-  },
-  'case-2': {
-    id: 'case-2',
-    title: 'XYZ製薬の研究開発効率化',
-    company: 'XYZ製薬',
-    industry: '製薬',
-    description: 'AI分析ツールの活用により、新薬開発プロセスのデータ分析時間を70%短縮。研究者の創造的業務に集中できる環境を実現しました。',
-    image: MOCK_IMAGES.case2,
-    challenge: '新薬開発における膨大な実験データの解析に多大な時間を要し、研究者が本来の創造的な研究業務に集中できない状況でした。また、データの見落としによるリスクも懸念されていました。',
-    solution: '機械学習を活用したデータ分析プラットフォームを導入。実験データの自動解析と異常値検出、パターン認識により、研究者の分析業務を大幅に効率化しました。',
-    results: [
-      'データ分析時間: 70%短縮',
-      '研究効率: 3倍向上',
-      '異常値検出精度: 95%以上',
-      '新薬候補発見率: 2倍向上'
-    ],
-    usedServices: ['機械学習プラットフォーム', 'データ分析AI', '創薬支援AI']
-  }
+  id: 'case-1',
+  title: '株式会社ABCの業務効率化事例',
+  company: '株式会社ABC',
+  industry: '小売',
+  description: 'AIアシスタントの導入により、カスタマーサポート業務の対応時間を50%削減。顧客満足度も15%向上しました。',
+  image: MOCK_IMAGES.case1,
+  challenge: '従来のカスタマーサポートでは、問い合わせ対応に多くの時間を要し、担当者の負荷が高い状況でした。また、営業時間外の対応ができないため、顧客満足度に課題がありました。',
+  solution: 'ChatGPTベースのAIアシスタントを導入し、よくある質問への自動応答システムを構築。24時間365日の対応を実現し、複雑な問い合わせのみ人間のオペレーターが対応する体制に変更しました。',
+  results: [
+    '問い合わせ対応時間: 50%削減',
+    '顧客満足度: 15%向上',
+    '営業時間外対応率: 100%実現',
+    'オペレーター負荷: 40%軽減'
+  ],
+  usedServices: ['ChatGPT API', 'AIチャットボット', 'カスタマーサポートAI']
 }
 
-export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
-  const { id } = await params
-  const caseStudy = caseStudyData[id as keyof typeof caseStudyData]
-
-  if (!caseStudy) {
-    notFound()
-  }
+export default async function CaseStudyCase1Page() {
+  const caseStudy = caseStudyData
 
   return (
     <div className="min-h-screen bg-background">
@@ -75,11 +46,12 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         {/* メイン画像 */}
         <div className="relative h-80 rounded-lg overflow-hidden mb-12">
           {caseStudy.image && (
-            <Image
+            <ImageWithFallback
               src={caseStudy.image || '/placeholder.svg'}
               alt={caseStudy.title || 'ケーススタディ画像'}
               fill
               className="object-cover"
+              fallbackType="article"
             />
           )}
         </div>

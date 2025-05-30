@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { SITE_NAME, MOCK_IMAGES } from '@/lib/constants'
+import { getArticleImage } from '@/lib/utils'
 import { ServiceCard } from '@/components/cards/service-card'
 import { CategoryCard } from '@/components/cards/category-card'
 import { SearchBarLive } from '@/components/search/search-bar-live'
@@ -9,6 +10,7 @@ import { IndustriesSection } from '@/components/sections/industries-section'
 import { FeaturedServicesSection } from '@/components/sections/featured-services-section'
 import { CaseStudiesSection } from '@/components/sections/case-studies-section'
 import { CTASection } from '@/components/sections/cta-section'
+import { ImageWithFallback } from '@/components/ui/image-with-fallback'
 import { getHomeData, getIndustrySolutions } from '@/lib/api/fetchers'
 
 export const metadata: Metadata = {
@@ -144,15 +146,16 @@ export default async function HomePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 {posts.slice(0, 6).map((post) => (
                   <div key={post.id} className="bg-background rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    {post.featuredImage?.node?.sourceUrl && (
-                      <div className="aspect-video relative overflow-hidden">
-                        <img
-                          src={post.featuredImage.node.sourceUrl}
-                          alt={post.title}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    )}
+                    <div className="aspect-video relative overflow-hidden">
+                      <ImageWithFallback
+                        src={getArticleImage(post)}
+                        alt={post.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        fallbackType="article"
+                      />
+                    </div>
                     <div className="p-6">
                       <div className="text-sm text-muted-foreground mb-2">
                         {new Date(post.date).toLocaleDateString('ja-JP')}

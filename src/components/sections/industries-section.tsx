@@ -7,22 +7,23 @@ interface IndustriesSectionProps {
 }
 
 export function IndustriesSection({ solutions = [] }: IndustriesSectionProps) {
-  // フォールバック用のモック業界データ
+  // フォールバック用のモック業界データ（サービス数付き）
   const defaultIndustries = [
-    { id: 'industry-1', name: '金融', slug: 'finance', image: MOCK_IMAGES.industry1 },
-    { id: 'industry-2', name: '製造', slug: 'manufacturing', image: MOCK_IMAGES.industry2 },
-    { id: 'industry-3', name: '製薬', slug: 'pharma', image: MOCK_IMAGES.industry3 },
-    { id: 'industry-4', name: '小売', slug: 'retail', image: MOCK_IMAGES.industry4 }
+    { id: 'industry-1', name: '金融', slug: 'finance', image: MOCK_IMAGES.industry1, serviceCount: 0 },
+    { id: 'industry-2', name: '製造', slug: 'manufacturing', image: MOCK_IMAGES.industry2, serviceCount: 0 },
+    { id: 'industry-3', name: '製薬', slug: 'pharma', image: MOCK_IMAGES.industry3, serviceCount: 0 },
+    { id: 'industry-4', name: '小売', slug: 'retail', image: MOCK_IMAGES.industry4, serviceCount: 0 }
   ];
 
   // WordPressからのデータがある場合はそれを使用、ない場合はデフォルトを使用
   const industries = solutions.length > 0 
     ? solutions.map(solution => ({
         id: solution.id,
-        name: solution.industrySolutionFields?.targetIndustry || solution.title,
+        name: solution.name || solution.industrySolutionFields?.targetIndustry || solution.title,
         slug: solution.slug,
-        image: solution.featuredImage?.node?.sourceUrl || MOCK_IMAGES.industry1,
-        description: solution.content || ''
+        image: solution.image || solution.featuredImage?.node?.sourceUrl || MOCK_IMAGES.industry1,
+        description: solution.description || solution.content || '',
+        serviceCount: solution.serviceCount || 0
       }))
     : defaultIndustries;
 
@@ -47,8 +48,13 @@ export function IndustriesSection({ solutions = [] }: IndustriesSectionProps) {
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <h3 className="text-white text-xl font-bold">{industry.name}</h3>
+                <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center">
+                  <h3 className="text-white text-xl font-bold mb-2">{industry.name}</h3>
+                  {industry.serviceCount > 0 && (
+                    <p className="text-white/90 text-sm">
+                      {industry.serviceCount}件のサービス
+                    </p>
+                  )}
                 </div>
               </div>
             </Link>

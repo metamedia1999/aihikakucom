@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { DEFAULT_LOGO } from '@/lib/constants'
 import { Badge } from '@/components/ui/badge'
-import { stripHtml } from '@/lib/utils'
+import { ImageWithFallback } from '@/components/ui/image-with-fallback'
+import { stripHtml, getServiceImage } from '@/lib/utils'
 
 interface ServiceCardProps {
   service: any
@@ -20,7 +20,7 @@ export function ServiceCard({ service, featured = false }: ServiceCardProps) {
     industries,
   } = service
 
-  const logoUrl = serviceFields?.logo?.sourceUrl || DEFAULT_LOGO
+  const logoUrl = getServiceImage(service)
   
   // KPI値の取得 (モックデータを使用)
   const costTier = Math.floor(Math.random() * 5) + 1
@@ -61,12 +61,13 @@ export function ServiceCard({ service, featured = false }: ServiceCardProps) {
       <div className="service-card border rounded-lg bg-card hover:shadow-lg transition-all duration-200 h-full overflow-hidden group">
         <div className="p-4 sm:p-6 flex items-start space-x-3 sm:space-x-4">
           <div className="relative h-12 w-12 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-lg bg-secondary/50">
-            <Image
+            <ImageWithFallback
               src={logoUrl}
               alt={title || 'サービスロゴ'}
               fill
               className="object-cover transition-transform duration-200 group-hover:scale-105"
               sizes="(max-width: 640px) 48px, 64px"
+              fallbackType="service"
             />
           </div>
           <div className="space-y-1 min-w-0 flex-1">

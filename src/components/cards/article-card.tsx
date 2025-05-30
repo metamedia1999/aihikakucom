@@ -1,10 +1,10 @@
 import Link from 'next/link'
-import Image from 'next/image'
-import { formatDate, stripHtml, truncateText } from '@/lib/utils'
+import { formatDate, stripHtml, truncateText, getArticleImage } from '@/lib/utils'
 import { DEFAULT_FEATURED_IMAGE } from '@/lib/constants'
 import { Post } from '@/types'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { ImageWithFallback } from '@/components/ui/image-with-fallback'
 import { CalendarIcon } from 'lucide-react'
 
 interface ArticleCardProps {
@@ -35,7 +35,7 @@ export function ArticleCard({ post, featured = false }: ArticleCardProps) {
     categories,
   } = post
 
-  const imageUrl = featuredImage?.node?.sourceUrl || DEFAULT_FEATURED_IMAGE
+  const imageUrl = getArticleImage(post)
   
   // excerptを安全に処理 - HTMLタグを除去してから省略
   const cleanExcerpt = excerpt ? stripHtml(truncateText(excerpt, 150)) : ''
@@ -51,12 +51,13 @@ export function ArticleCard({ post, featured = false }: ArticleCardProps) {
     <Link href={`/blog/${slug}`}>
       <Card className={`h-full overflow-hidden card-hover ${featured ? 'border-primary/20 shadow-md' : ''}`}>
         <div className="relative aspect-video w-full overflow-hidden">
-          <Image
+          <ImageWithFallback
             src={imageUrl}
             alt={title || '記事画像'}
             fill
             className="object-cover transition-transform duration-300 hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            fallbackType="article"
           />
         </div>
 

@@ -1,8 +1,8 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { SITE_NAME } from '@/lib/constants'
-import { getIndustryData, getIndustries } from '@/lib/api/fetchers'
+import { getIndustryData, getIndustries, getIndustrySolutions } from '@/lib/api/fetchers'
 import { ServiceCard } from '@/components/cards/service-card'
 import { SearchBarLive } from '@/components/search/search-bar-live'
 
@@ -14,8 +14,9 @@ interface IndustryPageProps {
 
 export async function generateStaticParams() {
   try {
-    const industries = await getIndustries()
-    return industries.map((industry) => ({
+    // getIndustrySolutionsを使用してサービスがある業界のみを取得
+    const industriesWithServices = await getIndustrySolutions()
+    return industriesWithServices.map((industry) => ({
       slug: industry.slug,
     }))
   } catch (error) {
@@ -97,11 +98,11 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
             <div className="text-center py-12">
               <div className="max-w-md mx-auto">
                 <h2 className="text-xl font-semibold mb-4">
-                  {industry.name}業界向けサービスを準備中
+                  この業界のサービスは現在登録されていません
                 </h2>
                 <p className="text-muted-foreground mb-6">
-                  {industry.name}業界に特化したAIサービスの情報を収集しています。<br />
-                  現在利用可能な他のサービスもご覧ください。
+                  {industry.name}業界に特化したAIサービスは現在登録されていません。<br />
+                  他の業界向けサービスもご覧ください。
                 </p>
                 
                 <div className="space-y-4">

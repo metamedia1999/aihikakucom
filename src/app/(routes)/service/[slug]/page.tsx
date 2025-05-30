@@ -1,13 +1,13 @@
 import { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getServiceData } from '@/lib/api/fetchers'
-import { stripHtml } from '@/lib/utils'
+import { stripHtml, getServiceImage } from '@/lib/utils'
 import { DEFAULT_LOGO, SITE_NAME } from '@/lib/constants'
 import { Badge } from '@/components/ui/badge'
 import { ArrowRight, Mail } from 'lucide-react'
 import { ComparisonTable } from '@/components/tables/comparison-table'
+import { ImageWithFallback } from '@/components/ui/image-with-fallback'
 
 // 10分間隔でページを再生成
 export const revalidate = 600
@@ -53,6 +53,31 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: 'サービスの読み込み中にエラーが発生しました。'
     }
   }
+}
+
+// Helper function to convert percentage to text label
+function getTextLabel(value: number | string | undefined | null, type: 'effectiveness' | 'supportLevel'): string {
+  if (value === undefined || value === null) return '-';
+  
+  const numValue = typeof value === 'string' ? parseFloat(value) : value;
+  
+  if (type === 'effectiveness') {
+    if (numValue >= 90) return '非常に高い';
+    if (numValue >= 70) return '高い';
+    if (numValue >= 50) return '普通';
+    if (numValue >= 30) return '低い';
+    return '非常に低い';
+  }
+  
+  if (type === 'supportLevel') {
+    if (numValue >= 90) return '充実';
+    if (numValue >= 70) return '良好';
+    if (numValue >= 50) return '標準';
+    if (numValue >= 30) return '基本的';
+    return '最小限';
+  }
+  
+  return '-';
 }
 
 export default async function ServicePage({ params }: { params: Promise<{ slug: string }> }): Promise<JSX.Element> {
@@ -103,7 +128,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       finalFields: fields ? Object.keys(fields) : null
     })
     
-    const logoUrl = fields?.logo?.node?.sourceUrl || fields?.logo?.sourceUrl || DEFAULT_LOGO
+    const logoUrl = getServiceImage(service)
     
     console.log('🇿 Logo URL resolved:', logoUrl)
 
@@ -117,7 +142,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         "@type": "Organization",
         "name": "AI比較.com"
       },
-      "priceRange": fields?.price || "要問い合わせ",
+      "priceRange": (fields as any)?.price || "要問い合わせ",
       "image": featuredImage?.node?.sourceUrl || logoUrl
     }
 
@@ -128,12 +153,13 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
           <div className="p-6 md:p-8 border-b">
             <div className="flex items-center">
               <div className="relative h-20 w-20 mr-6 shrink-0 overflow-hidden rounded bg-secondary">
-                <Image
+                <ImageWithFallback
                   src={logoUrl}
                   alt={title}
                   fill
                   className="object-cover"
                   sizes="80px"
+                  fallbackType="service"
                 />
               </div>
               <div>
@@ -156,25 +182,48 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 lg:gap-6">
             {/* メインコンテンツ */}
             <div className="lg:col-span-2 p-6 md:p-8">
-              {featuredImage?.node?.sourceUrl && (
-                <div className="relative aspect-video w-full mb-8 overflow-hidden rounded">
-                  <Image
-                    src={featuredImage.node.sourceUrl}
-                    alt={title}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 66vw"
-                  />
-                </div>
-              )}
-
-              <div className="prose max-w-none content" dangerouslySetInnerHTML={{ __html: content }} />
-
-              {/* 比較テーブル */}
-              <div className="mt-10 mb-6">
-                <h2 className="text-xl font-bold mb-4">他サービスと比較</h2>
-                <ComparisonTable tableId="compare" />
+              <div className="relative aspect-video w-full mb-8 overflow-hidden rounded">
+                <ImageWithFallback
+                  src={featuredImage?.node?.sourceUrl || getServiceImage(service)}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 66vw"
+                  fallbackType="service"
+                />
               </div>
+
+              <div className="prose max-w-none content" dangerouslySetInnerHTML={{ __html: content || '' }} />
+
+              {/* 比較テーブル - 一時的にコメントアウト
+                  TODO: ACFフィールドの設定後に有効化
+                  
+                  実装手順:
+                  1. WordPress管理画面でACFフィールドグループに追加:
+                     - フィールド名: comparison_table_id
+                     - フィールドタイプ: Text
+                     - 説明: TablePressで作成したテーブルのID
+                  
+                  2. GraphQLクエリ(queries.ts)を更新:
+                     serviceDetail {
+                       ...existing (fields as any)...
+                       comparisonTableId
+                     }
+                  
+                  3. TablePress APIまたはWPGraphQL拡張を実装:
+                     - TablePressデータをGraphQL経由で取得
+                     - または別途REST APIエンドポイントを作成
+                  
+                  4. ComparisonTableコンポーネントを更新:
+                     - fetchersでTablePressデータ取得関数を追加
+                     - モックデータを実データに置き換え
+                  
+                  5. 以下のコメントを解除して有効化:
+              */}
+              {/* <div className="mt-10 mb-6">
+                <h2 className="text-xl font-bold mb-4">他サービスと比較</h2>
+                <ComparisonTable tableId={(fields as any)?.comparisonTableId || "compare"} />
+              </div> */}
             </div>
 
             {/* サイドバー */}
@@ -184,16 +233,92 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                 <div>
                   <h3 className="text-lg font-bold mb-4">サービス概要</h3>
 
-                  {(fields?.serviceSummary || fields?.summary) && (
+                  {((fields as any)?.serviceSummary || (fields as any)?.summary) && (
                     <div className="mb-4">
-                      <p className="text-sm text-muted-foreground">{fields.serviceSummary || fields.summary}</p>
+                      <p className="text-sm text-muted-foreground">{(fields as any).serviceSummary || (fields as any).summary}</p>
                     </div>
                   )}
 
-                  {fields?.price && (
+                  {(fields as any)?.price && (
                     <div className="mb-4">
                       <h4 className="text-sm font-medium mb-1">料金プラン</h4>
-                      <p className="text-sm">{fields.price}</p>
+                      <p className="text-sm">{(fields as any).price}</p>
+                    </div>
+                  )}
+
+                  {/* 評価指標 */}
+                  {((fields as any)?.aiUtilization !== undefined || (fields as any)?.effectiveness !== undefined || 
+                    (fields as any)?.supportLevel !== undefined || (fields as any)?.transparencyScore !== undefined) && (
+                    <div className="space-y-3 mt-4 pt-4 border-t">
+                      <h4 className="text-sm font-medium mb-2">評価指標</h4>
+                      <div className="space-y-3">
+                    {(fields as any)?.aiUtilization !== undefined && (fields as any)?.aiUtilization !== null && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">AI活用度</span>
+                        <div className="flex items-center">
+                          <div className="w-24 bg-secondary rounded-full h-2 mr-2">
+                            <div 
+                              className="bg-primary h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${Number((fields as any).aiUtilization)}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-semibold">{Number((fields as any).aiUtilization)}%</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {(fields as any)?.effectiveness !== undefined && (fields as any)?.effectiveness !== null && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">効果性</span>
+                        <div className="flex items-center">
+                          <div className="w-24 bg-secondary rounded-full h-2 mr-2">
+                            <div 
+                              className="bg-primary h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${Number((fields as any).effectiveness)}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-semibold">{getTextLabel((fields as any).effectiveness, 'effectiveness')}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {(fields as any)?.supportLevel !== undefined && (fields as any)?.supportLevel !== null && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">サポートレベル</span>
+                        <div className="flex items-center">
+                          <div className="w-24 bg-secondary rounded-full h-2 mr-2">
+                            <div 
+                              className="bg-primary h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${Number((fields as any).supportLevel)}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-semibold">{getTextLabel((fields as any).supportLevel, 'supportLevel')}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {(fields as any)?.transparencyScore !== undefined && (fields as any)?.transparencyScore !== null && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm font-medium">透明性スコア</span>
+                        <div className="flex items-center">
+                          <div className="w-24 bg-secondary rounded-full h-2 mr-2">
+                            <div 
+                              className="bg-primary h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${Number((fields as any).transparencyScore)}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-semibold">{Number((fields as any).transparencyScore)}%</span>
+                        </div>
+                      </div>
+                    )}
+                      </div>
+                    </div>
+                  )}
+
+                  {(fields as any)?.industryCategory && (
+                    <div className="mt-4 pt-4 border-t">
+                      <h4 className="text-sm font-medium mb-1">業界カテゴリ</h4>
+                      <p className="text-sm text-muted-foreground">{(fields as any).industryCategory}</p>
                     </div>
                   )}
                 </div>

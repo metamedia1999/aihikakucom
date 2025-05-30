@@ -47,6 +47,12 @@ export const MOCK_IMAGES = {
   post4: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=1470&auto=format&fit=crop',
   post5: 'https://images.unsplash.com/photo-1624953587687-daf255b6b80a?q=80&w=1374&auto=format&fit=crop',
   post6: 'https://images.unsplash.com/photo-1495592822108-9e6261896da8?q=80&w=1470&auto=format&fit=crop',
+  case1: 'https://images.unsplash.com/photo-1556740758-90de374c12ad?q=80&w=1470&auto=format&fit=crop',
+  case2: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=1470&auto=format&fit=crop',
+  industry1: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1470&auto=format&fit=crop',
+  industry2: 'https://images.unsplash.com/photo-1587345908920-b681c040bc50?q=80&w=1470&auto=format&fit=crop',
+  industry3: 'https://images.unsplash.com/photo-1581091877018-dac6a371d50f?q=80&w=1470&auto=format&fit=crop',
+  industry4: 'https://images.unsplash.com/photo-1565728744382-61accd4aa148?q=80&w=1473&auto=format&fit=crop',
 };
 
 // 業務の悩みカテゴリ

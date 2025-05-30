@@ -28,7 +28,9 @@ import {
   GET_SERVICE_DATA,
   GET_POST_DATA,
   SEARCH_QUERY,
-  GET_INDUSTRY_DATA
+  GET_INDUSTRY_DATA,
+  GET_ALL_SERVICES,
+  GET_INDUSTRIES_LIST
 } from './queries'
 
 // =============================
@@ -142,11 +144,7 @@ export async function getHomeData() {
     }
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('❌ WordPress home data fetch failed:', {
-        error: error instanceof Error ? error.message : error,
-        stack: error instanceof Error ? error.stack : undefined
-      })
-      console.log('🔄 Falling back to mock data...')
+      console.warn('⚠️ WordPress home data fetch failed, using fallback data')
     }
     return getMockHomeData()
   }
@@ -204,7 +202,7 @@ export async function getServiceData(slug: string): Promise<Service> {
     
     if (!data.service) {
       if (process.env.NODE_ENV === 'development') {
-        console.error('❌ Service not found in GraphQL response')
+        console.warn('⚠️ Service not found in GraphQL response:', slug)
       }
       throw new Error(`Service with slug "${slug}" not found in WordPress`)
     }
@@ -226,12 +224,7 @@ export async function getServiceData(slug: string): Promise<Service> {
     return normalizedService
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('❌ WordPress service fetch failed:', {
-        slug,
-        error: error instanceof Error ? error.message : error,
-        stack: error instanceof Error ? error.stack : undefined
-      })
-      console.log('🔄 Falling back to mock data...')
+      console.warn('⚠️ WordPress service fetch failed, using fallback data for:', slug)
     }
     return getMockServiceData(slug)
   }
@@ -269,7 +262,7 @@ export async function getPostData(slug: string): Promise<Post> {
     
     if (!data.post) {
       if (process.env.NODE_ENV === 'development') {
-        console.error('❌ Post not found in GraphQL response')
+        console.warn('⚠️ Post not found in GraphQL response:', slug)
       }
       throw new Error(`Post with slug "${slug}" not found in WordPress`)
     }
@@ -280,12 +273,7 @@ export async function getPostData(slug: string): Promise<Post> {
     return data.post
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('❌ WordPress post fetch failed:', {
-        slug,
-        error: error instanceof Error ? error.message : error,
-        stack: error instanceof Error ? error.stack : undefined
-      })
-      console.log('🔄 Falling back to mock data...')
+      console.warn('⚠️ WordPress post fetch failed, using fallback data for:', slug)
     }
     return getMockPostData(slug)
   }
@@ -307,49 +295,91 @@ export async function getIndustryData(slug: string) {
   try {
     if (process.env.NODE_ENV === 'development') {
       console.log('🔄 Attempting to fetch industry from WordPress GraphQL...')
-      console.log('🔍 Query variables:', { slug })
     }
     
-    const data = await fetchGraphQL<{ category: any }>(GET_INDUSTRY_DATA, { slug })
+    // First, fetch the category information
+    const categoryData = await fetchGraphQL<{ category: any }>(GET_INDUSTRY_DATA, { slug })
     
-    if (process.env.NODE_ENV === 'development') {
-      console.log('📦 GraphQL response received:', {
-        hasCategory: !!data.category,
-        categoryName: data.category?.name,
-        servicesCount: data.category?.posts?.nodes?.length || 0
-      })
-    }
-    
-    if (!data.category) {
+    if (!categoryData.category) {
       if (process.env.NODE_ENV === 'development') {
-        console.error('❌ Category not found in GraphQL response')
+        console.warn('⚠️ Category not found in GraphQL, using fallback data for:', slug)
       }
-      throw new Error(`Category with slug "${slug}" not found in WordPress`)
+      // Return fallback data instead of throwing error
+      return createFallbackIndustryData(slug)
     }
     
     if (process.env.NODE_ENV === 'development') {
-      console.log('✅ WordPress industry data fetched successfully')
+      console.log('📦 Category fetched:', categoryData.category?.name)
+    }
+    
+    // Then, fetch all services and filter by category
+    const servicesData = await fetchGraphQL<{ allService: { nodes: any[] } }>(GET_ALL_SERVICES)
+    
+    // Filter services that belong to this category
+    const categoryServices = servicesData.allService?.nodes?.filter(service => 
+      service.industries?.nodes?.some(industry => industry.slug === slug)
+    ) || []
+    
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📦 Services filtered:', categoryServices.length, 'found')
     }
     
     return {
       industry: {
-        id: data.category.id,
-        slug: data.category.slug,
-        name: data.category.name,
-        description: data.category.description
+        id: categoryData.category.id,
+        slug: categoryData.category.slug,
+        name: categoryData.category.name,
+        description: categoryData.category.description
       },
-      services: data.category.posts.nodes.map(normalizeService)
+      services: categoryServices.map(normalizeService)
     }
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('❌ WordPress industry fetch failed:', {
-        slug,
-        error: error instanceof Error ? error.message : error,
-        stack: error instanceof Error ? error.stack : undefined
-      })
-      console.log('🔄 Falling back to mock data...')
+      console.warn('⚠️ WordPress industry fetch failed, using fallback for:', slug)
     }
-    return getMockIndustryData(slug)
+    return createFallbackIndustryData(slug)
+  }
+}
+
+// フォールバックデータ作成関数
+function createFallbackIndustryData(slug: string) {
+  // 業界名マッピング
+  const industryNameMap: Record<string, string> = {
+    'finance': '金融',
+    'pharma': '製薬',
+    'manufacturing': '製造業',
+    'healthcare': '医療・ヘルスケア',
+    'retail': '小売・流通',
+    'logistics': '物流',
+    'education': '教育',
+    'agriculture': '農業',
+    'construction': '建設・建築',
+    'energy': 'エネルギー'
+  }
+  
+  const industryName = industryNameMap[slug] || `${slug.charAt(0).toUpperCase() + slug.slice(1)}`
+  
+  // 基本的な業界情報を作成
+  const industry = {
+    id: `fallback-${slug}`,
+    slug: slug,
+    name: industryName,
+    description: `${industryName}業界向けのAIソリューション一覧。業務効率化と生産性向上を実現する最新のAI技術をご紹介します。`
+  }
+  
+  // モックデータから関連サービスを取得
+  try {
+    const mockData = getMockIndustryData(slug)
+    return {
+      industry,
+      services: mockData.services
+    }
+  } catch (error) {
+    // モックデータも取得できない場合は汎用サービスを提供
+    return {
+      industry,
+      services: []
+    }
   }
 }
 
@@ -608,7 +638,7 @@ export async function getCaseStudies(): Promise<any[]> {
   }
 }
 
-// 業界別ソリューション取得
+// 業界別ソリューション取得（サービス数付き）
 export async function getIndustrySolutions(): Promise<any[]> {
   if (process.env.NODE_ENV === 'development') {
     console.log('🏢 getIndustrySolutions called')
@@ -626,41 +656,64 @@ export async function getIndustrySolutions(): Promise<any[]> {
       console.log('🔄 Attempting to fetch categories from WordPress GraphQL...')
     }
     
-    const data = await fetchGraphQL<{ categories: { nodes: any[] } }>(`
-      query GetCategories {
-        categories(where: { hideEmpty: true }) {
-          nodes {
-            id
-            slug
-            name
-            description
-            count
-          }
-        }
-      }
-    `)
+    const data = await fetchGraphQL<{ categories: { nodes: any[] } }>(GET_INDUSTRIES_LIST)
     
-    if (process.env.NODE_ENV === 'development') {
-      console.log('📦 Categories fetched successfully:', {
-        categoriesCount: data.categories?.nodes?.length || 0
-      })
+    if (!data.categories?.nodes || data.categories.nodes.length === 0) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('⚠️ No categories found in GraphQL, using fallback data')
+      }
+      return getMockIndustrySolutions()
     }
     
-    return data.categories.nodes.map(category => ({
-      id: category.id,
-      slug: category.slug,
-      name: category.name,
-      description: category.description || `${category.name}業界向けのAIソリューション`,
-      count: category.count,
-      image: '/placeholder.jpg' // プレースホルダー画像
-    }))
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📦 Categories fetched:', data.categories.nodes.length)
+    }
+    
+    // 各業界のサービス数を取得するための並列処理（エラーハンドリング改善）
+    const industriesWithCounts = await Promise.all(
+      data.categories.nodes.map(async (category) => {
+        try {
+          const industryData = await getIndustryData(category.slug)
+          return {
+            id: category.id,
+            slug: category.slug,
+            name: category.name,
+            description: category.description || `${category.name}業界向けのAIソリューション`,
+            serviceCount: industryData.services.length,
+            image: '/placeholder.jpg'
+          }
+        } catch (error) {
+          // エラーが発生した場合でも基本情報は返す
+          if (process.env.NODE_ENV === 'development') {
+            console.warn(`⚠️ Failed to fetch services for industry ${category.slug}, using 0 count`)
+          }
+          return {
+            id: category.id,
+            slug: category.slug,
+            name: category.name,
+            description: category.description || `${category.name}業界向けのAIソリューション`,
+            serviceCount: 0,
+            image: '/placeholder.jpg'
+          }
+        }
+      })
+    )
+    
+    // サービスが1件以上ある業界のみを返す（フォールバックも含める）
+    const industriesWithServices = industriesWithCounts.filter(industry => industry.serviceCount > 0)
+    
+    // もし何も見つからなければモックデータを返す
+    if (industriesWithServices.length === 0) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('⚠️ No industries with services found, using mock data')
+      }
+      return getMockIndustrySolutions()
+    }
+    
+    return industriesWithServices
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('❌ WordPress categories fetch failed:', {
-        error: error instanceof Error ? error.message : error,
-        stack: error instanceof Error ? error.stack : undefined
-      })
-      console.log('🔄 Falling back to mock data...')
+      console.warn('⚠️ WordPress categories fetch failed, using fallback data')
     }
     return getMockIndustrySolutions()
   }
