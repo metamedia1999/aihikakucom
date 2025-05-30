@@ -1,15 +1,30 @@
+'use client'
+
 import Link from 'next/link'
 import { DEFAULT_LOGO } from '@/lib/constants'
 import { Badge } from '@/components/ui/badge'
 import { ImageWithFallback } from '@/components/ui/image-with-fallback'
 import { stripHtml, getServiceImage } from '@/lib/utils'
+import { motion } from 'framer-motion'
+import { Star } from 'lucide-react'
 
 interface ServiceCardProps {
   service: any
   featured?: boolean
+  index?: number
 }
 
-export function ServiceCard({ service, featured = false }: ServiceCardProps) {
+// サービスロゴの背景色設定
+const serviceLogoColors: { [key: string]: string } = {
+  'chatgpt': 'linear-gradient(135deg, #10a37f 0%, #0d8f6f 100%)',
+  'canva': 'linear-gradient(135deg, #00c4cc 0%, #00a8b0 100%)',
+  'dalle': 'linear-gradient(135deg, #333333 0%, #1a1a1a 100%)',
+  'firefly': 'linear-gradient(135deg, #ff4500 0%, #ff6347 100%)',
+  'stable': 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)',
+  'midjourney': 'linear-gradient(135deg, #0066CC 0%, #0052A3 100%)',
+}
+
+export function ServiceCard({ service, featured = false, index = 0 }: ServiceCardProps) {
   
   const {
     slug,
@@ -21,108 +36,89 @@ export function ServiceCard({ service, featured = false }: ServiceCardProps) {
 
   const logoUrl = getServiceImage(service)
   
-  // KPI値の取得 (モックデータを使用)
-  const costTier = Math.floor(Math.random() * 5) + 1
-  const aiRate = Math.floor(Math.random() * 100)
-  const effectTime = ['week', 'month', 'quarter'][Math.floor(Math.random() * 3)]
-  const supportRating = Math.floor(Math.random() * 5) + 1
+  // 評価スコア (実際のデータがない場合のモック)
+  const rating = serviceFields?.rating || '4.4'
+  
+  // サービスタグを決定
+  const tags: { label: string; type: string }[] = []
+  if (serviceFields?.featured || featured) tags.push({ label: '人気', type: 'popular' })
+  if (serviceFields?.isFree) tags.push({ label: '無料', type: 'free' })
+  if (serviceFields?.isSecure) tags.push({ label: '安心', type: 'safe' })
+  if (serviceFields?.isHighQuality) tags.push({ label: '高品質', type: 'quality' })
 
-  // 効果時間表示用のヘルパー
-  const getEffectTimeText = (type: string) => {
-    switch(type) {
-      case 'week': return '1-2週間';
-      case 'month': return '1ヶ月程度';
-      case 'quarter': return '3ヶ月以上';
-      default: return '要確認';
-    }
+  const getLogoStyle = (slug: string) => {
+    const lowerSlug = slug.toLowerCase()
+    return serviceLogoColors[lowerSlug] || 'linear-gradient(135deg, #0066CC 0%, #0052A3 100%)'
   }
-
-  // コストティア用のヘルパー関数
-  const renderCostTier = (tier: number) => {
-    return '¥'.repeat(tier);
-  }
-
-  // サポート評価用のヘルパー関数
-  const renderSupportRating = (rating: number) => {
-    return '★'.repeat(rating);
-  }
-
-  // KPI値をリスト化
-  const kpiList = [
-    { label: '料金帯', value: renderCostTier(costTier) },
-    { label: 'AI活用率', value: `${aiRate}%` },
-    { label: '効果実感', value: getEffectTimeText(effectTime) },
-    { label: 'サポート', value: renderSupportRating(supportRating) },
-  ]
 
   return (
-    <Link href={`/service/${slug}`}>
-      <div className="service-card border rounded-lg bg-card hover:shadow-lg transition-all duration-200 h-full overflow-hidden group">
-        <div className="p-4 sm:p-6 flex items-start space-x-3 sm:space-x-4">
-          <div className="relative h-12 w-12 sm:h-16 sm:w-16 shrink-0 overflow-hidden rounded-lg bg-secondary/50">
-            <ImageWithFallback
-              src={logoUrl}
-              alt={title || 'サービスロゴ'}
-              fill
-              className="object-cover transition-transform duration-200 group-hover:scale-105"
-              sizes="(max-width: 640px) 48px, 64px"
-              fallbackType="service"
-            />
-          </div>
-          <div className="space-y-1 min-w-0 flex-1">
-            <h3 className="font-semibold leading-tight text-sm sm:text-base line-clamp-2 group-hover:text-primary transition-colors">{title}</h3>
-            {serviceFields?.price && (
-              <div className="text-xs text-muted-foreground truncate">
-                料金: {serviceFields.price}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+    >
+      <Link href={`/service/${slug}`}>
+        <div className="bg-white border border-neutral-200 rounded-xl hover:shadow-lg transition-all duration-300 h-full overflow-hidden hover:border-primary-blue hover:-translate-y-1 group">
+          <div className="p-6">
+            {/* ヘッダー部分 */}
+            <div className="flex items-start space-x-4 mb-4">
+              <div 
+                className="relative h-12 w-12 shrink-0 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-sm transition-transform duration-300 group-hover:rotate-[-5deg] group-hover:scale-105"
+                style={{ background: getLogoStyle(slug) }}
+              >
+                {title?.charAt(0) || 'S'}
               </div>
-            )}
-            {industries?.nodes && industries.nodes.length > 0 && (
-              <div className="flex flex-wrap gap-1">
-                {industries.nodes.slice(0, 2).map((industry: any) => (
-                  <Badge key={industry.id} variant="secondary" className="text-[10px] px-2 py-0.5">
-                    {industry.name}
-                  </Badge>
-                ))}
-                {industries.nodes.length > 2 && (
-                  <Badge variant="outline" className="text-[10px] px-2 py-0.5">
-                    +{industries.nodes.length - 2}
-                  </Badge>
-                )}
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-lg text-neutral-900 line-clamp-1 group-hover:text-primary-blue transition-colors">
+                  {title}
+                </h3>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="flex items-center">
+                    {[...Array(5)].map((_, i) => (
+                      <Star 
+                        key={i} 
+                        className={`h-3 w-3 ${i < Math.floor(Number(rating)) ? 'fill-warning-yellow text-warning-yellow' : 'fill-neutral-300 text-neutral-300'}`}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-sm text-neutral-600">({rating})</span>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
-
-        {/* KPI Badges */}
-        <div className="px-4 sm:px-6 pb-2">
-          <div className="grid grid-cols-2 gap-1 sm:gap-2 text-[10px] border-t border-b py-2 my-2">
-            {kpiList.map((kpi, index) => (
-              <div key={index} className="flex justify-between items-center">
-                <span className="text-muted-foreground truncate">{kpi.label}:</span>
-                <span className="font-medium ml-1">{kpi.value}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="px-4 sm:px-6 pb-4">
-          <div className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-2">{stripHtml(excerpt || '')}</div>
-          
-          {/* Transparency Score - 円グラフを使わない代替表示 */}
-          <div className="flex justify-between items-center text-xs">
-            <span className="text-muted-foreground">透明性スコア</span>
-            <div className="flex items-center space-x-1">
-              <div className="w-8 h-1.5 bg-secondary rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-primary rounded-full transition-all duration-500"
-                  style={{ width: `${Math.floor(Math.random() * 100)}%` }}
-                />
-              </div>
-              <span className="font-medium text-primary">{Math.floor(Math.random() * 100)}</span>
             </div>
+
+            {/* 説明文 */}
+            <p className="text-sm text-neutral-600 line-clamp-2 mb-4">
+              {stripHtml(excerpt || '') || 'AIを活用した革新的なサービスです。'}
+            </p>
+
+            {/* タグ */}
+            {tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {tags.map((tag, idx) => (
+                  <span
+                    key={idx}
+                    className={`
+                      px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider border
+                      ${tag.type === 'popular' ? 'bg-warning-yellow/10 text-yellow-800 border-warning-yellow/30' : ''}
+                      ${tag.type === 'safe' ? 'bg-success-green/10 text-green-800 border-success-green/30' : ''}
+                      ${tag.type === 'free' ? 'bg-primary-light text-primary-blue border-primary-blue/30' : ''}
+                      ${tag.type === 'quality' ? 'bg-accent-orange/10 text-orange-800 border-accent-orange/30' : ''}
+                      ${!tag.type ? 'bg-neutral-100 text-neutral-700 border-neutral-200' : ''}
+                    `}
+                  >
+                    {tag.label}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* ボタン */}
+            <button className="w-full py-3 px-4 border-2 border-primary-blue text-primary-blue rounded-lg font-semibold text-sm transition-all duration-300 hover:bg-primary-blue hover:text-white hover:transform hover:translate-y-[-1px]">
+              詳細を見る
+            </button>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </motion.div>
   )
 }

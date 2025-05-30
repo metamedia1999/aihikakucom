@@ -48,7 +48,7 @@ export default async function CaseStudyCase1Page() {
         <div className="relative h-80 rounded-lg overflow-hidden mb-12">
           {caseStudy.image && (
             <ImageWithFallback
-              src={caseStudy.image || '/placeholder.svg'}
+              src={caseStudy.image}
               alt={caseStudy.title || 'ケーススタディ画像'}
               fill
               className="object-cover"

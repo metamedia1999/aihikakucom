@@ -7,20 +7,20 @@ import { ServiceCard } from '@/components/cards/service-card'
 import { CategoryCard } from '@/components/cards/category-card'
 import { SearchBarLive } from '@/components/search/search-bar-live'
 import { HeroSection } from '@/components/sections/hero-section'
-import { ImageWithFallback } from '@/components/ui/image-with-fallback'
+import { ArticleCard } from '@/components/cards/article-card'
 import { getHomeData, getIndustrySolutions } from '@/lib/api/fetchers'
 
 // 遅延読み込みするコンポーネント
 const IndustriesSection = dynamic(() => import('@/components/sections/industries-section'), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-lg" />
+  loading: () => <div className="h-96 bg-gradient-to-br from-blue-50 to-purple-50 animate-pulse rounded-lg" />
 })
 
 const CaseStudiesSection = dynamic(() => import('@/components/sections/case-studies-section'), {
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-lg" />
+  loading: () => <div className="h-96 bg-gradient-to-br from-green-50 to-blue-50 animate-pulse rounded-lg" />
 })
 
 const CTASection = dynamic(() => import('@/components/sections/cta-section'), {
-  loading: () => <div className="h-48 bg-gray-100 animate-pulse rounded-lg" />
+  loading: () => <div className="h-48 bg-gradient-to-br from-orange-50 to-pink-50 animate-pulse rounded-lg" />
 })
 
 export const metadata: Metadata = {
@@ -156,45 +156,7 @@ export default async function HomePage() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 {posts.slice(0, 6).map((post) => (
-                  <div key={post.id} className="bg-background rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <div className="aspect-video relative overflow-hidden">
-                      <ImageWithFallback
-                        src={getArticleImage(post)}
-                        alt={post.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        fallbackType="article"
-                        loading="lazy"
-                        priority={false}
-                      />
-                    </div>
-                    <div className="p-6">
-                      <div className="text-sm text-muted-foreground mb-2">
-                        {new Date(post.date).toLocaleDateString('ja-JP')}
-                      </div>
-                      <h3 className="text-lg font-semibold mb-2 line-clamp-2">
-                        <Link href={`/blog/${post.slug}`} className="hover:text-primary">
-                          {post.title}
-                        </Link>
-                      </h3>
-                      <div className="text-sm text-muted-foreground line-clamp-3">
-                        {post.excerpt ? post.excerpt.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ').trim() : ''}
-                      </div>
-                      {post.categories?.nodes && post.categories.nodes.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mt-4">
-                          {post.categories.nodes.slice(0, 2).map((category) => (
-                            <span
-                              key={category.id}
-                              className="px-2 py-1 bg-secondary text-xs rounded-md"
-                            >
-                              {category.name}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <ArticleCard key={post.id} post={post} />
                 ))}
               </div>
 

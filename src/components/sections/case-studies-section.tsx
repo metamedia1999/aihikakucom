@@ -17,7 +17,7 @@ export default function CaseStudiesSection() {
           <a href="/case-studies/case-1" className="case-study-card border rounded-md bg-white overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
             <div className="relative h-48">
               <Image
-                src={MOCK_IMAGES.case1 || '/placeholder.jpg'}
+                src={MOCK_IMAGES.case1}
                 alt="株式会社ABCの業務効率化事例"
                 fill
                 className="object-cover"
@@ -41,7 +41,7 @@ export default function CaseStudiesSection() {
           <a href="/case-studies/case-2" className="case-study-card border rounded-md bg-white overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
             <div className="relative h-48">
               <Image
-                src={MOCK_IMAGES.case2 || '/placeholder.jpg'}
+                src={MOCK_IMAGES.case2}
                 alt="XYZ製薬の研究開発効率化"
                 fill
                 className="object-cover"

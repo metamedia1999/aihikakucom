@@ -10,20 +10,38 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
+    --primary: 211 100% 40%; /* 青色に変更 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 16% 96%;
+    --secondary-foreground: 214 32% 31%;
+    --muted: 210 16% 96%;
+    --muted-foreground: 215 14% 34%;
+    --accent: 17 100% 60%; /* オレンジ */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 61%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    --border: 210 18% 92%;
+    --input: 210 18% 92%;
+    --ring: 211 100% 40%;
     --radius: 0.5rem;
+    
+    /* プロフェッショナルカラーパレット */
+    --primary-blue: #0066CC;
+    --primary-dark: #0052A3;
+    --primary-light: #E6F2FF;
+    --accent-orange: #FF6B35;
+    --accent-red: #E53E3E;
+    --success-green: #38A169;
+    --warning-yellow: #F6AD55;
+    --neutral-900: #1A202C;
+    --neutral-800: #2D3748;
+    --neutral-700: #4A5568;
+    --neutral-600: #718096;
+    --neutral-500: #A0AEC0;
+    --neutral-400: #CBD5E0;
+    --neutral-300: #E2E8F0;
+    --neutral-200: #EDF2F7;
+    --neutral-100: #F7FAFC;
   }
 
   .dark {
@@ -65,9 +83,15 @@
     overflow-x: hidden;
   }
   
+  html {
+    scroll-behavior: smooth;
+  }
+  
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "palt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   /* ヘッダー、フッター、メイン要素の余白リセット */
@@ -91,6 +115,23 @@
 @layer components {
   .container-wide {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* プロフェッショナルボタンスタイル */
+  .btn-primary {
+    @apply bg-primary-blue text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+    @apply hover:bg-primary-dark hover:shadow-lg hover:transform hover:-translate-y-0.5;
+  }
+  
+  .btn-secondary {
+    @apply bg-white text-primary-blue border-2 border-primary-blue px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+    @apply hover:bg-primary-blue hover:text-white hover:shadow-lg hover:transform hover:-translate-y-0.5;
+  }
+  
+  .btn-accent {
+    @apply text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+    background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-red) 100%);
+    @apply hover:shadow-lg hover:transform hover:-translate-y-0.5;
   }
 
   .hero-search {
@@ -170,6 +211,14 @@
   }
   .snap-center {
     scroll-snap-align: center;
+  }
+  
+  /* テキストシャドウ */
+  .text-shadow {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  .text-shadow-md {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
   
   /* 比較テーブルのスティッキー列サポート */

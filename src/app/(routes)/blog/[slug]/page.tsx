@@ -157,7 +157,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 ← 記事一覧に戻る
               </Link>
 
-              {categories?.nodes && categories.nodes[0] && (
+              {categories?.nodes?.[0] && (
                 <Link
                   href={`/category/${categories.nodes[0].slug}`}
                   className="text-primary hover:underline"

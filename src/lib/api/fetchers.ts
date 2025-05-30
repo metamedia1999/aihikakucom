@@ -432,7 +432,7 @@ export async function getIndustrySolutions(): Promise<any[]> {
             name: category.name,
             description: category.description || `${category.name}業界向けのAIソリューション`,
             serviceCount: industryData.services.length,
-            image: '/placeholder.svg'
+            image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=600&fit=crop&auto=format'
           }
         } catch (error) {
           // エラーが発生した場合でも基本情報は返す
@@ -442,7 +442,7 @@ export async function getIndustrySolutions(): Promise<any[]> {
             name: category.name,
             description: category.description || `${category.name}業界向けのAIソリューション`,
             serviceCount: 0,
-            image: '/placeholder.svg'
+            image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=600&fit=crop&auto=format'
           }
         }
       })

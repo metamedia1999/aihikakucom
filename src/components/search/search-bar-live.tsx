@@ -113,16 +113,16 @@ export function SearchBarLive() {
             setShowSuggestions(true)
           }}
           onFocus={() => setShowSuggestions(true)}
-          className="hero-search-input pl-12"
+          className="w-full py-5 pl-14 pr-36 text-lg border-none rounded-full outline-none transition-all duration-300 text-neutral-800 placeholder:text-neutral-500"
         />
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+        <div className="absolute left-6 top-1/2 -translate-y-1/2 text-neutral-500">
           <Search className="h-5 w-5" />
         </div>
         {searchQuery && (
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-14 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            className="absolute right-24 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-700 transition-colors duration-200"
           >
             <X className="h-5 w-5" />
             <span className="sr-only">クリア</span>
@@ -130,17 +130,16 @@ export function SearchBarLive() {
         )}
         <button
           type="submit"
-          className="hero-search-button"
+          className="absolute right-2 top-1/2 -translate-y-1/2 bg-gradient-to-r from-primary-blue to-primary-dark text-white rounded-full px-8 py-3 font-semibold text-base transition-all duration-300 hover:scale-[1.02] hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={!searchQuery.trim()}
         >
-          <Search className="h-5 w-5" />
-          <span className="sr-only">検索</span>
+          検索する
         </button>
       </form>
 
       {/* 候補一覧 */}
       {showSuggestions && searchQuery.length >= 2 && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border rounded-lg shadow-lg z-10 max-h-80 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-neutral-200 rounded-2xl shadow-xl z-10 max-h-80 overflow-y-auto">
           {loading ? (
             <div className="p-4 text-center text-muted-foreground">
               <span className="inline-block animate-spin mr-2">⏳</span>
@@ -151,10 +150,10 @@ export function SearchBarLive() {
               {suggestions.map((item) => (
                 <li key={item.id} className="border-b last:border-b-0">
                   <button
-                    className="w-full text-left p-3 hover:bg-secondary flex items-start"
+                    className="w-full text-left p-4 hover:bg-neutral-100 flex items-start transition-colors duration-200"
                     onClick={() => handleSuggestionClick(item.slug)}
                   >
-                    <div className="relative h-10 w-10 mr-3 shrink-0 overflow-hidden rounded bg-secondary">
+                    <div className="relative h-10 w-10 mr-3 shrink-0 overflow-hidden rounded-lg bg-neutral-100">
                       <Image
                         src={item.serviceFields?.logo?.sourceUrl || DEFAULT_LOGO}
                         alt={item.title}

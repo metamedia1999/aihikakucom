@@ -3,8 +3,7 @@ import Link from 'next/link'
 import { SITE_NAME } from '@/lib/constants'
 import { getPosts } from '@/lib/api/fetchers'
 import { Pagination } from '@/components/ui/pagination'
-import { stripHtml, getArticleImage } from '@/lib/utils'
-import { ImageWithFallback } from '@/components/ui/image-with-fallback'
+import { ArticleCard } from '@/components/cards/article-card'
 
 export const metadata: Metadata = {
   title: `記事一覧 | ${SITE_NAME}`,
@@ -50,53 +49,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
           {currentPosts && currentPosts.length > 0 ? (
             <>
-              <div className="grid gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {currentPosts.map((post) => (
-                  <article key={post.id} className="bg-background rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border">
-                    <div className="md:flex">
-                      <div className="md:w-1/3 aspect-video md:aspect-square relative">
-                        <ImageWithFallback
-                          src={getArticleImage(post)}
-                          alt={post.title}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, 33vw"
-                          fallbackType="article"
-                        />
-                      </div>
-                      <div className="md:w-2/3 p-6">
-                        <div className="text-sm text-muted-foreground mb-2">
-                          {new Date(post.date).toLocaleDateString('ja-JP')}
-                        </div>
-                        <h2 className="text-xl font-semibold mb-3 line-clamp-2">
-                          <Link href={`/blog/${post.slug}`} className="hover:text-primary">
-                            {post.title}
-                          </Link>
-                        </h2>
-                        <p className="text-muted-foreground line-clamp-3 mb-4">
-                          {stripHtml(post.excerpt || '')}
-                        </p>
-                        {post.categories?.nodes && post.categories.nodes.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mb-4">
-                            {post.categories.nodes.map((category) => (
-                              <span
-                                key={category.id}
-                                className="px-2 py-1 bg-secondary text-xs rounded-md"
-                              >
-                                {category.name}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                        <Link
-                          href={`/blog/${post.slug}`}
-                          className="text-primary hover:underline text-sm font-medium"
-                        >
-                          続きを読む →
-                        </Link>
-                      </div>
-                    </div>
-                  </article>
+                  <ArticleCard key={post.id} post={post} />
                 ))}
               </div>
               

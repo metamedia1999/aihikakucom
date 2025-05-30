@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { getImageFallback } from '@/lib/utils'
+import { getImageFallback, getGradientFallback } from '@/lib/utils'
 import { useState } from 'react'
 
 interface ImageWithFallbackProps {
@@ -16,6 +16,8 @@ interface ImageWithFallbackProps {
   priority?: boolean
   loading?: 'lazy' | 'eager'
   quality?: number
+  useGradientFallback?: boolean
+  gradientSeed?: string
 }
 
 export function ImageWithFallback({
@@ -29,23 +31,47 @@ export function ImageWithFallback({
   fallbackType = 'service',
   priority = false,
   loading = 'lazy',
-  quality = 75
+  quality = 75,
+  useGradientFallback = false,
+  gradientSeed
 }: ImageWithFallbackProps) {
   const [imgSrc, setImgSrc] = useState(src)
   const [isLoading, setIsLoading] = useState(true)
+  const [useGradient, setUseGradient] = useState(false)
 
   const handleError = () => {
-    setImgSrc(getImageFallback(fallbackType))
+    if (useGradientFallback) {
+      setUseGradient(true)
+      setIsLoading(false)
+    } else {
+      setImgSrc(getImageFallback(fallbackType))
+    }
   }
 
   const handleLoad = () => {
     setIsLoading(false)
   }
 
+  if (useGradient) {
+    const gradient = getGradientFallback(gradientSeed || alt)
+    return (
+      <div 
+        className={`relative ${className}`}
+        style={{ background: gradient }}
+      >
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-white font-medium text-lg opacity-80">
+            AI
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={`relative ${className}`}>
       {isLoading && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse rounded" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-purple-100 animate-pulse rounded" />
       )}
       <Image
         src={imgSrc}

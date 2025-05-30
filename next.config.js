@@ -81,6 +81,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'ai-daiko.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'admin.xn--ai-fk1eu00k.tokyo',
+      },
     ],
   },
   

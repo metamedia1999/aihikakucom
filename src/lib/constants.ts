@@ -27,20 +27,20 @@ export const FOOTER_LINKS = {
   ],
 };
 
-// デフォルト画像
-export const DEFAULT_FEATURED_IMAGE = '/placeholder.svg';
-export const DEFAULT_AVATAR = '/placeholder.svg';
-export const DEFAULT_LOGO = '/placeholder.svg';
+// デフォルト画像 - 魅力的なUnsplash画像に変更
+export const DEFAULT_FEATURED_IMAGE = 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=600&fit=crop&auto=format';
+export const DEFAULT_AVATAR = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop&auto=format';
+export const DEFAULT_LOGO = 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&h=200&fit=crop&auto=format';
 
-// サービス画像（モック用）
+// サービス画像（モック用） - 全て魅力的なUnsplash画像に変更
 export const MOCK_IMAGES = {
   hero: 'https://images.unsplash.com/photo-1677442135132-141970ad6a2a?q=80&w=1632&auto=format&fit=crop',
-  service1: '/placeholder.svg',
-  service2: '/placeholder.svg',
-  service3: '/placeholder.svg',
-  service4: '/placeholder.svg',
-  service5: '/placeholder.svg',
-  service6: '/placeholder.svg',
+  service1: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=600&fit=crop&auto=format',
+  service2: 'https://images.unsplash.com/photo-1677442136019-701c7d7e6463?w=800&h=600&fit=crop&auto=format',
+  service3: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&h=600&fit=crop&auto=format',
+  service4: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&auto=format',
+  service5: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop&auto=format',
+  service6: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=600&fit=crop&auto=format',
   post1: 'https://images.unsplash.com/photo-1484417894907-623942c8ee29?q=80&w=1632&auto=format&fit=crop',
   post2: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1470&auto=format&fit=crop',
   post3: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1470&auto=format&fit=crop',

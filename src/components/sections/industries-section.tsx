@@ -43,7 +43,7 @@ export default function IndustriesSection({ solutions = [] }: IndustriesSectionP
             <Link key={industry.id} href={`/industry/${industry.slug}`}>
               <div className="industry-card relative h-48 rounded-md overflow-hidden group">
                 <Image
-                  src={industry.image || '/placeholder.jpg'}
+                  src={industry.image || 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop&auto=format'}
                   alt={industry.name || '業界ソリューション画像'}
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
