@@ -104,10 +104,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     const imageUrl = featuredImage?.node?.sourceUrl || DEFAULT_FEATURED_IMAGE
 
     return (
-      <article className="container-wide" style={{ paddingTop: '8px !important', paddingBottom: '8px !important' }}>
+      <article className="container-wide">
         <div className="max-w-3xl mx-auto">
           {/* 記事ヘッダー */}
-          <div className="mb-2" style={{ marginBottom: '8px !important' }}>
+          <div className="mb-6">
             <div className="flex items-center text-sm text-muted-foreground mb-4">
               <CalendarIcon className="h-4 w-4 mr-2" />
               <time dateTime={date}>{formatDate(date)}</time>
@@ -126,18 +126,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               )}
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ marginBottom: '8px !important' }}>{title}</h1>
+            <h1 className="text-3xl md:text-4xl font-bold">{title}</h1>
           </div>
 
           {/* アイキャッチ画像 */}
-          <div className="relative aspect-video w-full mb-3 overflow-hidden rounded-lg" style={{ marginBottom: '12px !important' }}>
+          <div className="relative aspect-video w-full overflow-hidden rounded-lg">
             <Image
               src={imageUrl}
               alt={title}
               fill
               className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 50vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 50vw"
               priority
+              quality={80}
+              placeholder="blur"
+              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
             />
           </div>
 
@@ -148,7 +151,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           />
 
           {/* 記事フッター */}
-          <div className="mt-6 pt-3 border-t" style={{ marginTop: '24px !important', paddingTop: '12px !important' }}>
+          <div className="mt-12 pt-6 border-t">
             <div className="flex justify-between">
               <Link href="/blog" className="text-primary hover:underline">
                 ← 記事一覧に戻る

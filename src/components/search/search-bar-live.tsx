@@ -161,6 +161,8 @@ export function SearchBarLive() {
                         fill
                         className="object-cover"
                         sizes="40px"
+                        loading="eager"
+                        quality={60}
                       />
                     </div>
                     <div>
