@@ -59,11 +59,21 @@ export default function ContactPage() {
     setIsError(false)
 
     try {
-      // 実際の実装ではAPIを呼び出してフォームを送信
-      // ここではダミーの実装として1秒後に成功したことにする
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
 
-      console.log('Form values:', values)
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'フォームの送信に失敗しました')
+      }
+
+      console.log('Contact form submitted successfully:', result)
       setIsSuccess(true)
       form.reset()
     } catch (error) {

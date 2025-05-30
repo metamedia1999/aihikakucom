@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getServiceData } from '@/lib/api/fetchers'
@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 function getTextLabel(value: number | string | undefined | null, type: 'effectiveness' | 'supportLevel'): string {
   if (value === undefined || value === null) return '-';
   
-  const numValue = typeof value === 'string' ? parseFloat(value) : value;
+  const numValue = typeof value === 'string' ? Number.parseFloat(value) : value;
   
   if (type === 'effectiveness') {
     if (numValue >= 90) return '非常に高い';

@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { SITE_NAME, MOCK_IMAGES } from '@/lib/constants'
 import { getArticleImage } from '@/lib/utils'

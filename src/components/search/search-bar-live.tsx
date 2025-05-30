@@ -1,10 +1,10 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState, useEffect, FormEvent, useRef } from 'react'
+import { useState, useEffect, type FormEvent, useRef } from 'react'
 import { Search, X } from 'lucide-react'
 import { searchContent } from '@/lib/api/fetchers'
-import { Service } from '@/types'
+import type { Service } from '@/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import { DEFAULT_LOGO } from '@/lib/constants'

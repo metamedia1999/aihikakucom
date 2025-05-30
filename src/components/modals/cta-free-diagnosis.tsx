@@ -70,19 +70,28 @@ export function CTAFreeDiagnosis() {
     setIsError(false)
 
     try {
-      // 実際の実装では /wp-json/contact-form-7/v1/contact-forms/1/feedback にPOST
-      // ここではダミーの実装として1秒後に成功したことにする
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const response = await fetch('/api/diagnosis', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      })
 
-      console.log('Diagnosis form values:', values)
+      const result = await response.json()
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'フォームの送信に失敗しました')
+      }
+
+      console.log('Diagnosis form submitted successfully:', result)
       setIsSuccess(true)
       form.reset()
 
       // 成功したら3秒後にサンクスページにリダイレクト
       setTimeout(() => {
         setOpen(false)
-        const submissionId = `mock-${Date.now()}`
-        router.push(`/thankyou?lead=${submissionId}`)
+        router.push(`/thankyou?lead=${result.leadId}`)
       }, 3000)
     } catch (error) {
       console.error('Form submission failed:', error)
@@ -104,16 +113,16 @@ export function CTAFreeDiagnosis() {
               className="rounded-full shadow-lg flex items-center gap-2"
             >
               <Lightbulb className="h-5 w-5" />
-              1分診断で最適AIを探す
+              簡単AI診断で最適サービスを探す
             </Button>
           </DialogTrigger>
         </div>
 
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>1分AI診断</DialogTitle>
+            <DialogTitle>簡単AI診断</DialogTitle>
             <DialogDescription>
-              簡単な質問に答えるだけで、あなたのビジネスに最適なAIサービスをご提案します。
+              簡単な質問に答えるだけで、あなたのビジネスに最適なAIサービスをご提案します。結果は後日メールでお送りします。
             </DialogDescription>
           </DialogHeader>
 
@@ -122,7 +131,7 @@ export function CTAFreeDiagnosis() {
               <CheckCircle2 className="h-4 w-4 text-green-500" />
               <AlertTitle>送信完了</AlertTitle>
               <AlertDescription>
-                診断情報を受け付けました。専門スタッフが最適なAIサービスを厳選してご提案します。
+                診断情報を受け付けました。結果は後日メールでお送りします。専門スタッフが最適なAIサービスを厳選してご提案します。
               </AlertDescription>
             </Alert>
           ) : isError ? (
@@ -230,7 +239,7 @@ export function CTAFreeDiagnosis() {
                     className="w-full"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? '送信中...' : '無料診断を受ける'}
+                    {isSubmitting ? '送信中...' : 'AI診断を受ける'}
                   </Button>
                 </DialogFooter>
               </form>

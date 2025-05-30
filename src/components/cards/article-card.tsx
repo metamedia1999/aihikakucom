@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { formatDate, stripHtml, truncateText, getArticleImage } from '@/lib/utils'
 import { DEFAULT_FEATURED_IMAGE } from '@/lib/constants'
-import { Post } from '@/types'
+import type { Post } from '@/types'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { ImageWithFallback } from '@/components/ui/image-with-fallback'

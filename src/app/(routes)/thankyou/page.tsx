@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { ServiceCard } from '@/components/cards/service-card'
 import { useEffect, useState } from 'react'
 import { getHomeData } from '@/lib/api/fetchers'
-import { Service } from '@/types'
+import type { Service } from '@/types'
 
 export default function ThankYouPage() {
   const searchParams = useSearchParams()

@@ -152,9 +152,12 @@ export function getArticleImage(article: {[key: string]: any}): string {
 }
 
 // 画像読み込みエラー時のフォールバック関数
-export function getImageFallback(type: 'service' | 'article' = 'service'): string {
+export function getImageFallback(type: 'service' | 'article' | 'industry' = 'service'): string {
   if (type === 'service') {
     return 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&h=400&fit=crop';
+  }
+  if (type === 'industry') {
+    return 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=400&fit=crop';
   }
   return 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&h=400&fit=crop';
 }

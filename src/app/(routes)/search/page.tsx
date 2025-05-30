@@ -6,7 +6,7 @@ import { ServiceCard } from '@/components/cards/service-card'
 import { SearchBarLive } from '@/components/search/search-bar-live'
 import { StickyFilterBar } from '@/components/filter/sticky-filter-bar'
 import { searchContent } from '@/lib/api/fetchers'
-import { Service } from '@/types'
+import type { Service } from '@/types'
 
 export default function SearchPage() {
   const searchParams = useSearchParams()

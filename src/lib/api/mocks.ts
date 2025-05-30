@@ -1,4 +1,4 @@
-import { Industry, Service, Post, SearchResult } from '@/types';
+import type { Industry, Service, Post, SearchResult } from '@/types';
 import { INDUSTRIES, MOCK_IMAGES } from '@/lib/constants';
 
 // モック業界データ
