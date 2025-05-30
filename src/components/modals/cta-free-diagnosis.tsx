@@ -84,7 +84,6 @@ export function CTAFreeDiagnosis() {
         throw new Error(result.message || 'フォームの送信に失敗しました')
       }
 
-      console.log('Diagnosis form submitted successfully:', result)
       setIsSuccess(true)
       form.reset()
 
@@ -94,7 +93,6 @@ export function CTAFreeDiagnosis() {
         router.push(`/thankyou?lead=${result.leadId}`)
       }, 3000)
     } catch (error) {
-      console.error('Form submission failed:', error)
       setIsError(true)
     } finally {
       setIsSubmitting(false)

@@ -50,7 +50,7 @@ export const MOCK_IMAGES = {
   case1: 'https://images.unsplash.com/photo-1556740758-90de374c12ad?q=80&w=1470&auto=format&fit=crop',
   case2: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=1470&auto=format&fit=crop',
   industry1: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=1470&auto=format&fit=crop',
-  industry2: 'https://images.unsplash.com/photo-1587345908920-b681c040bc50?q=80&w=1470&auto=format&fit=crop',
+  industry2: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1470&auto=format&fit=crop',
   industry3: 'https://images.unsplash.com/photo-1581091877018-dac6a371d50f?q=80&w=1470&auto=format&fit=crop',
   industry4: 'https://images.unsplash.com/photo-1565728744382-61accd4aa148?q=80&w=1473&auto=format&fit=crop',
 };

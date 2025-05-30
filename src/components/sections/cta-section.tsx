@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export function CTASection() {
+export default function CTASection() {
   return (
     <section className="py-16 bg-primary/10">
       <div className="container-wide">

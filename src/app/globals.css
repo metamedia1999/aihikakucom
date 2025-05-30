@@ -50,21 +50,47 @@
 }
 
 @layer base {
+  /* 余白リセット - ブラウザのデフォルト余白を完全に除去 */
   * {
     @apply border-border;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "palt" 1;
   }
+  
+  /* ヘッダー、フッター、メイン要素の余白リセット */
+  header, main, footer, section, article, div {
+    margin: 0;
+    padding: 0;
+  }
+  
   h1, h2, h3, h4, h5, h6 {
     @apply font-bold tracking-tight;
+    margin: 0;
+    padding: 0;
+  }
+  
+  p, ul, ol, li {
+    margin: 0;
+    padding: 0;
   }
 }
 
 @layer components {
   .container-wide {
-    @apply container max-w-7xl mx-auto px-4 sm:px-6;
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
   .hero-search {
@@ -165,25 +191,70 @@ html {
 
 /* コンテンツスタイル */
 .content h2 {
-  @apply text-2xl mt-8 mb-4;
+  @apply text-2xl mt-6 mb-3;
 }
 
 .content h3 {
-  @apply text-xl mt-6 mb-3;
+  @apply text-xl mt-5 mb-2;
 }
 
 .content p {
-  @apply mb-4 leading-relaxed;
+  @apply mb-3 leading-relaxed;
 }
 
 .content ul {
-  @apply list-disc pl-5 mb-4;
+  @apply list-disc pl-5 mb-3;
 }
 
 .content ol {
-  @apply list-decimal pl-5 mb-4;
+  @apply list-decimal pl-5 mb-3;
 }
 
 .content a {
   @apply text-primary hover:underline;
+}
+
+/* 記事ページの余白強制削減 */
+article.container-wide {
+  margin: 0 !important;
+  padding: 4px 16px !important;
+}
+
+article .max-w-3xl {
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+article h1 {
+  margin-top: 0 !important;
+  margin-bottom: 8px !important;
+}
+
+article .prose {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+article .prose > * {
+  margin-top: 8px !important;
+  margin-bottom: 8px !important;
+}
+
+article .prose > *:first-child {
+  margin-top: 0 !important;
+}
+
+article .prose > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* 記事画像の余白削減 */
+article .aspect-video {
+  margin: 8px 0 !important;
+}
+
+/* 記事メタ情報の余白削減 */
+article .flex.items-center {
+  margin: 0 !important;
+  padding: 0 !important;
 }

@@ -17,15 +17,8 @@ export function formatDate(dateString: string): string {
 
 // HTMLタグを削除する関数
 export function stripHtml(html: string): string {
-  console.log('🔧 stripHtml called with:', {
-    input: html,
-    type: typeof html,
-    length: html?.length || 0,
-    preview: html ? `${html.substring(0, 200)}...` : 'null/undefined'
-  })
   
   if (!html || typeof html !== 'string') {
-    console.log('⚠️ stripHtml: empty/invalid input, returning empty string')
     return '';
   }
   
@@ -42,11 +35,6 @@ export function stripHtml(html: string): string {
     .replace(/&nbsp;/g, ' ')
     .trim();
   
-  console.log('✅ stripHtml result:', {
-    original_length: html.length,
-    stripped_length: decoded.length,
-    preview: `${decoded.substring(0, 200)}...`
-  })
   
   return decoded;
 }

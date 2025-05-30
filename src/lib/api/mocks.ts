@@ -657,7 +657,6 @@ export const mockPosts: Post[] = [
 
 // モックデータ取得関数
 export function getMockHomeData() {
-  console.log('getMockHomeData called');
   
   // 安全なディープコピーを作成
   const safeServices = mockServices.map(service => {
@@ -674,7 +673,6 @@ export function getMockHomeData() {
     return serviceCopy;
   });
   
-  console.log(`getMockHomeData returning ${safeServices.length} services`);
   
   return {
     services: safeServices,
@@ -684,14 +682,9 @@ export function getMockHomeData() {
 }
 
 export function getMockIndustryData(slug: string) {
-  console.log(`getMockIndustryData called for slug: ${slug}`);
-  
   const industry = mockIndustries.find(i => i.slug === slug);
   
   if (!industry) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`Creating fallback industry data for: ${slug}`);
-    }
     
     // より詳細な業界名マッピング
     const industryNameMap: Record<string, { name: string; description: string; }> = {
@@ -761,8 +754,6 @@ export function getMockIndustryData(slug: string) {
 }
 
 export function getMockServiceData(slug: string) {
-  console.log(`getMockServiceData called for slug: ${slug}`);
-  
   const service = mockServices.find(s => s.slug === slug);
   if (!service) {
     throw new Error(`Service with slug ${slug} not found`);
@@ -773,7 +764,10 @@ export function getMockServiceData(slug: string) {
 }
 
 export function getMockPostData(slug: string) {
-  console.log(`getMockPostData called for slug: ${slug}`);
+  // 画像ファイルスラッグの場合は例外をスロー
+  if (slug.match(/\.(jpg|png|gif|jpeg)$/i)) {
+    throw new Error(`Invalid blog post slug: ${slug} (image file)`);
+  }
   
   const post = mockPosts.find(p => p.slug === slug);
   if (!post) {
@@ -785,8 +779,6 @@ export function getMockPostData(slug: string) {
 }
 
 export function mockSearchContent(searchTerm: string): SearchResult {
-  console.log(`mockSearchContent called with term: ${searchTerm}`);
-  
   // 検索語を小文字に変換して部分一致検索
   const term = searchTerm.toLowerCase();
   

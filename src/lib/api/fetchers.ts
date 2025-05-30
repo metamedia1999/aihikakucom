@@ -39,17 +39,6 @@ import {
 
 // WordPress から取得したデータを正規化する関数
 function normalizeService(service: any): Service {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🔧 normalizeService called with:', {
-      id: service.id,
-      title: service.title,
-      hasServiceDetail: !!service.serviceDetail,
-      hasServiceFields: !!service.serviceFields,
-      serviceDetailStructure: service.serviceDetail ? Object.keys(service.serviceDetail) : null,
-      serviceFieldsStructure: service.serviceFields ? Object.keys(service.serviceFields) : null
-    })
-  }
-  
   // serviceDetailフィールドを既存フィールドにフォールバック
   const extractPrice = () => {
     if (service.serviceDetail?.price) return service.serviceDetail.price
@@ -89,16 +78,6 @@ function normalizeService(service: any): Service {
     industries: service.industries
   }
   
-  if (process.env.NODE_ENV === 'development') {
-    console.log('✅ Service normalized:', {
-      hasServiceDetail: !!normalized.serviceDetail,
-      hasServiceFields: !!normalized.serviceFields,
-      extractedPrice: normalized.serviceFields.price,
-      extractedSummary: normalized.serviceFields.summary?.substring(0, 50) + '...',
-      industriesCount: normalized.industries?.nodes?.length || 0
-    })
-  }
-  
   return normalized
 }
 
@@ -108,34 +87,16 @@ function normalizeService(service: any): Service {
 
 // ホームページデータ取得
 export async function getHomeData() {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🏠 getHomeData called, USE_MOCK_DATA:', USE_MOCK_DATA)
-  }
-  
   if (USE_MOCK_DATA) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🎭 Using mock data for home page')
-    }
     return getMockHomeData()
   }
 
   try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔄 Attempting to fetch from WordPress GraphQL...')
-    }
     const data = await fetchGraphQL<{
       allService: { nodes: any[] }
       posts: { nodes: any[] }
       categories: { nodes: Industry[] }
     }>(GET_HOME_DATA)
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('📦 WordPress home data fetched successfully:', {
-        servicesCount: data.allService?.nodes?.length || 0,
-        postsCount: data.posts?.nodes?.length || 0,
-        categoriesCount: data.categories?.nodes?.length || 0
-      })
-    }
     
     return {
       services: data.allService.nodes.map(normalizeService),
@@ -143,26 +104,17 @@ export async function getHomeData() {
       industries: data.categories.nodes
     }
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('⚠️ WordPress home data fetch failed, using fallback data')
-    }
     return getMockHomeData()
   }
 }
 
 // ホームページ用サービス一覧取得
 export async function getHomeServices(): Promise<Service[]> {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('getHomeServices called')
-  }
-  
   try {
     const homeData = await getHomeData()
     return homeData.services
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching home services:', error)
-    }
+    console.error('Error fetching home services:', error)
     const mockData = getMockHomeData()
     return mockData.services
   }
@@ -170,146 +122,57 @@ export async function getHomeServices(): Promise<Service[]> {
 
 // サービス詳細データ取得
 export async function getServiceData(slug: string): Promise<Service> {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('📋 getServiceData called for slug:', slug)
-  }
-  
   if (USE_MOCK_DATA) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🎭 Using mock data for service:', slug)
-    }
     return getMockServiceData(slug)
   }
 
   try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔄 Attempting to fetch service from WordPress GraphQL...')
-      console.log('🔍 Query variables:', { slug })
-    }
-    
     const data = await fetchGraphQL<{ service: any }>(GET_SERVICE_DATA, { slug })
     
-    if (process.env.NODE_ENV === 'development') {
-      console.log('📦 GraphQL response received:', {
-        hasService: !!data.service,
-        serviceTitle: data.service?.title,
-        hasServiceDetail: !!data.service?.serviceDetail,
-        hasServiceFields: !!data.service?.serviceFields,
-        serviceDetailKeys: data.service?.serviceDetail ? Object.keys(data.service.serviceDetail) : null,
-        serviceFieldsKeys: data.service?.serviceFields ? Object.keys(data.service.serviceFields) : null
-      })
-    }
-    
     if (!data.service) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('⚠️ Service not found in GraphQL response:', slug)
-      }
       throw new Error(`Service with slug "${slug}" not found in WordPress`)
     }
     
-    if (process.env.NODE_ENV === 'development') {
-      console.log('✅ WordPress service data fetched successfully')
-    }
     const normalizedService = normalizeService(data.service)
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔄 Service normalization complete:', {
-        id: normalizedService.id,
-        title: normalizedService.title,
-        hasServiceDetail: !!normalizedService.serviceDetail,
-        hasServiceFields: !!normalizedService.serviceFields
-      })
-    }
     
     return normalizedService
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('⚠️ WordPress service fetch failed, using fallback data for:', slug)
-    }
     return getMockServiceData(slug)
   }
 }
 
 // ブログ記事データ取得
 export async function getPostData(slug: string): Promise<Post> {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('📄 getPostData called for slug:', slug)
-  }
-  
   if (USE_MOCK_DATA) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🎭 Using mock data for post:', slug)
-    }
     return getMockPostData(slug)
   }
 
   try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔄 Attempting to fetch post from WordPress GraphQL...')
-      console.log('🔍 Query variables:', { slug })
-    }
-    
     const data = await fetchGraphQL<{ post: Post }>(GET_POST_DATA, { slug })
     
-    if (process.env.NODE_ENV === 'development') {
-      console.log('📦 GraphQL response received:', {
-        hasPost: !!data.post,
-        postTitle: data.post?.title,
-        postExcerpt: data.post?.excerpt?.substring(0, 100) + '...',
-        postContentLength: data.post?.content?.length || 0
-      })
-    }
-    
     if (!data.post) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('⚠️ Post not found in GraphQL response:', slug)
-      }
       throw new Error(`Post with slug "${slug}" not found in WordPress`)
     }
     
-    if (process.env.NODE_ENV === 'development') {
-      console.log('✅ WordPress post data fetched successfully')
-    }
     return data.post
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('⚠️ WordPress post fetch failed, using fallback data for:', slug)
-    }
     return getMockPostData(slug)
   }
 }
 
 // 業界ページデータ取得
 export async function getIndustryData(slug: string) {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🏢 getIndustryData called for slug:', slug)
-  }
-  
   if (USE_MOCK_DATA) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🎭 Using mock data for industry:', slug)
-    }
     return getMockIndustryData(slug)
   }
 
   try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔄 Attempting to fetch industry from WordPress GraphQL...')
-    }
-    
     // First, fetch the category information
     const categoryData = await fetchGraphQL<{ category: any }>(GET_INDUSTRY_DATA, { slug })
     
     if (!categoryData.category) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('⚠️ Category not found in GraphQL, using fallback data for:', slug)
-      }
       // Return fallback data instead of throwing error
       return createFallbackIndustryData(slug)
-    }
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('📦 Category fetched:', categoryData.category?.name)
     }
     
     // Then, fetch all services and filter by category
@@ -319,10 +182,6 @@ export async function getIndustryData(slug: string) {
     const categoryServices = servicesData.allService?.nodes?.filter(service => 
       service.industries?.nodes?.some(industry => industry.slug === slug)
     ) || []
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('📦 Services filtered:', categoryServices.length, 'found')
-    }
     
     return {
       industry: {
@@ -334,9 +193,6 @@ export async function getIndustryData(slug: string) {
       services: categoryServices.map(normalizeService)
     }
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('⚠️ WordPress industry fetch failed, using fallback for:', slug)
-    }
     return createFallbackIndustryData(slug)
   }
 }
@@ -385,51 +241,31 @@ function createFallbackIndustryData(slug: string) {
 
 // 検索機能
 export async function searchContent(searchTerm: string): Promise<SearchResult> {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('searchContent called with term:', searchTerm)
-  }
-  
   if (!searchTerm || searchTerm.trim().length === 0) {
     return { services: [], posts: [] }
   }
   
   if (USE_MOCK_DATA) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Using mock search for term:', searchTerm)
-    }
     return mockSearchContent(searchTerm)
   }
 
   try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Attempting to search WordPress...')
-    }
     const data = await fetchGraphQL<{
       services: { nodes: any[] }
       posts: { nodes: Post[] }
     }>(SEARCH_QUERY, { searchTerm: searchTerm.trim() })
     
-    if (process.env.NODE_ENV === 'development') {
-      console.log('WordPress search completed successfully')
-    }
     return {
       services: data.services.nodes.map(normalizeService),
       posts: data.posts.nodes
     }
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('WordPress search failed, falling back to mock search:', error)
-    }
     return mockSearchContent(searchTerm)
   }
 }
 
 // サービス一覧取得（業界フィルタリング対応）
 export async function getServices(industrySlug?: string): Promise<Service[]> {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('getServices called with industrySlug:', industrySlug)
-  }
-  
   try {
     if (industrySlug) {
       const industryData = await getIndustryData(industrySlug)
@@ -438,9 +274,7 @@ export async function getServices(industrySlug?: string): Promise<Service[]> {
       return await getHomeServices()
     }
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching services:', error)
-    }
+    console.error('Error fetching services:', error)
     const mockData = getMockHomeData()
     if (industrySlug) {
       // Filter by industry if specified
@@ -454,39 +288,13 @@ export async function getServices(industrySlug?: string): Promise<Service[]> {
 
 // 記事一覧取得
 export async function getPosts(): Promise<Post[]> {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('getPosts called')
-  }
-  
   try {
     const homeData = await getHomeData()
     
-    // デバッグ用のログ出力
-    console.log('=== getPosts Debug Info ===')
-    console.log('Total posts fetched:', homeData.posts?.length || 0)
-    console.log('First few posts:', homeData.posts?.slice(0, 3).map(p => ({
-      id: p.id,
-      title: p.title,
-      slug: p.slug
-    })))
-    console.log('Last few posts:', homeData.posts?.slice(-3).map(p => ({
-      id: p.id,
-      title: p.title,
-      slug: p.slug
-    })))
-    console.log('==========================')
-    
     return homeData.posts
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching posts:', error)
-    }
+    console.error('Error fetching posts:', error)
     const mockData = getMockHomeData()
-    
-    // モックデータのデバッグログ
-    console.log('=== getPosts Mock Data Debug ===')
-    console.log('Mock posts length:', mockData.posts?.length || 0)
-    console.log('================================')
     
     return mockData.posts
   }
@@ -494,17 +302,11 @@ export async function getPosts(): Promise<Post[]> {
 
 // 業界一覧取得
 export async function getIndustries(): Promise<Industry[]> {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('getIndustries called')
-  }
-  
   try {
     const homeData = await getHomeData()
     return homeData.industries
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error fetching industries:', error)
-    }
+    console.error('Error fetching industries:', error)
     const mockData = getMockHomeData()
     return mockData.industries
   }
@@ -521,22 +323,12 @@ export async function getIndustries(): Promise<Industry[]> {
 // 3. サービス詳細（価格、機能、カテゴリ、ベンダー、評価等）を含む
 // 4. API失敗時はモックデータにフォールバック
 export async function getAiServices(): Promise<any[]> {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('getAiServices called')
-  }
-  
   // モックデータを使用する場合の早期リターン
   if (USE_MOCK_DATA) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Using mock data for AI services')
-    }
     return getMockAiServices()
   }
 
   try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Fetching AI services from WordPress...')
-    }
     // WordPress GraphQL APIからAIサービスデータを取得
     const data = await fetchGraphQL<{ aiServices: { nodes: any[] } }>(gql`
       query GetAiServices {
@@ -564,14 +356,8 @@ export async function getAiServices(): Promise<any[]> {
         }
       }
     `)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('AI services fetched successfully')
-    }
     return data.aiServices.nodes
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('WordPress AI services fetch failed, falling back to mock data:', error)
-    }
     return getMockAiServices()
   }
 }
@@ -583,22 +369,12 @@ export async function getAiServices(): Promise<any[]> {
 // 3. 各ケースの詳細（企業名、業界、課題、解決策、結果等）を含む
 // 4. API失敗時はモックデータにフォールバック
 export async function getCaseStudies(): Promise<any[]> {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('getCaseStudies called')
-  }
-  
   // モックデータを使用する場合の早期リターン
   if (USE_MOCK_DATA) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Using mock data for case studies')
-    }
     return getMockCaseStudies()
   }
 
   try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Fetching case studies from WordPress...')
-    }
     // WordPress GraphQL APIからケーススタディデータを取得
     const data = await fetchGraphQL<{ caseStudies: { nodes: any[] } }>(gql`
       query GetCaseStudies {
@@ -626,47 +402,23 @@ export async function getCaseStudies(): Promise<any[]> {
         }
       }
     `)
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Case studies fetched successfully')
-    }
     return data.caseStudies.nodes
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('WordPress case studies fetch failed, falling back to mock data:', error)
-    }
     return getMockCaseStudies()
   }
 }
 
 // 業界別ソリューション取得（サービス数付き）
 export async function getIndustrySolutions(): Promise<any[]> {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('🏢 getIndustrySolutions called')
-  }
-  
   if (USE_MOCK_DATA) {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🎭 Using mock data for industry solutions')
-    }
     return getMockIndustrySolutions()
   }
 
   try {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔄 Attempting to fetch categories from WordPress GraphQL...')
-    }
-    
     const data = await fetchGraphQL<{ categories: { nodes: any[] } }>(GET_INDUSTRIES_LIST)
     
     if (!data.categories?.nodes || data.categories.nodes.length === 0) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('⚠️ No categories found in GraphQL, using fallback data')
-      }
       return getMockIndustrySolutions()
-    }
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log('📦 Categories fetched:', data.categories.nodes.length)
     }
     
     // 各業界のサービス数を取得するための並列処理（エラーハンドリング改善）
@@ -680,20 +432,17 @@ export async function getIndustrySolutions(): Promise<any[]> {
             name: category.name,
             description: category.description || `${category.name}業界向けのAIソリューション`,
             serviceCount: industryData.services.length,
-            image: '/placeholder.jpg'
+            image: '/placeholder.svg'
           }
         } catch (error) {
           // エラーが発生した場合でも基本情報は返す
-          if (process.env.NODE_ENV === 'development') {
-            console.warn(`⚠️ Failed to fetch services for industry ${category.slug}, using 0 count`)
-          }
           return {
             id: category.id,
             slug: category.slug,
             name: category.name,
             description: category.description || `${category.name}業界向けのAIソリューション`,
             serviceCount: 0,
-            image: '/placeholder.jpg'
+            image: '/placeholder.svg'
           }
         }
       })
@@ -704,27 +453,17 @@ export async function getIndustrySolutions(): Promise<any[]> {
     
     // もし何も見つからなければモックデータを返す
     if (industriesWithServices.length === 0) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('⚠️ No industries with services found, using mock data')
-      }
       return getMockIndustrySolutions()
     }
     
     return industriesWithServices
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('⚠️ WordPress categories fetch failed, using fallback data')
-    }
     return getMockIndustrySolutions()
   }
 }
 
 // 単一ケーススタディ取得
 export async function getCaseStudy(slug: string): Promise<any> {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('getCaseStudy called for slug:', slug)
-  }
-  
   if (USE_MOCK_DATA) {
     return getMockCaseStudy(slug)
   }
@@ -761,10 +500,6 @@ export async function getCaseStudy(slug: string): Promise<any> {
     
     return data.caseStudy
   } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('WordPress case study fetch failed, falling back to mock data:', error)
-    }
     return getMockCaseStudy(slug)
   }
 }
-//

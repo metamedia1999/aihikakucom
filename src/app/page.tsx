@@ -1,25 +1,35 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { SITE_NAME, MOCK_IMAGES } from '@/lib/constants'
 import { getArticleImage } from '@/lib/utils'
 import { ServiceCard } from '@/components/cards/service-card'
 import { CategoryCard } from '@/components/cards/category-card'
 import { SearchBarLive } from '@/components/search/search-bar-live'
 import { HeroSection } from '@/components/sections/hero-section'
-import { IndustriesSection } from '@/components/sections/industries-section'
-import { FeaturedServicesSection } from '@/components/sections/featured-services-section'
-import { CaseStudiesSection } from '@/components/sections/case-studies-section'
-import { CTASection } from '@/components/sections/cta-section'
 import { ImageWithFallback } from '@/components/ui/image-with-fallback'
 import { getHomeData, getIndustrySolutions } from '@/lib/api/fetchers'
+
+// 遅延読み込みするコンポーネント
+const IndustriesSection = dynamic(() => import('@/components/sections/industries-section'), {
+  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-lg" />
+})
+
+const CaseStudiesSection = dynamic(() => import('@/components/sections/case-studies-section'), {
+  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-lg" />
+})
+
+const CTASection = dynamic(() => import('@/components/sections/cta-section'), {
+  loading: () => <div className="h-48 bg-gray-100 animate-pulse rounded-lg" />
+})
 
 export const metadata: Metadata = {
   title: SITE_NAME,
   description: '中小企業向けAIBPOサービスを比較・検討できるプラットフォーム。業務効率化に最適なAIサービスを見つけましょう。',
 }
 
-// 10分間隔でページを再生成
-export const revalidate = 600
+// 1時間間隔でページを再生成（パフォーマンス向上）
+export const revalidate = 3600
 
 // モックカテゴリーデータ
 const categories = [
@@ -69,12 +79,13 @@ const categories = [
 
 export default async function HomePage() {
   try {
-    // 包括的なホームページデータを取得
-    const homeData = await getHomeData()
-    const { services, posts, industries } = homeData
+    // 並列でデータを取得してパフォーマンス向上
+    const [homeData, industrySolutions] = await Promise.all([
+      getHomeData(),
+      getIndustrySolutions()
+    ])
     
-    // 業界別ソリューションデータを取得
-    const industrySolutions = await getIndustrySolutions()
+    const { services, posts, industries } = homeData
 
     return (
       <>
@@ -154,6 +165,8 @@ export default async function HomePage() {
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         fallbackType="article"
+                        loading="lazy"
+                        priority={false}
                       />
                     </div>
                     <div className="p-6">
@@ -205,7 +218,6 @@ export default async function HomePage() {
       </>
     )
   } catch (error) {
-    console.error('Failed to load home page:', error);
     return (
       <div className="container-wide py-12">
         <div className="max-w-2xl mx-auto text-center">

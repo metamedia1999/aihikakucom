@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { MOCK_IMAGES } from '@/lib/constants'
 
-export function CaseStudiesSection() {
+export default function CaseStudiesSection() {
   // モック導入事例データ
   const caseStudies = [
     {
@@ -42,6 +42,7 @@ export function CaseStudiesSection() {
                   alt={caseStudy.title || '導入事例画像'}
                   fill
                   className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
               <div className="p-6">

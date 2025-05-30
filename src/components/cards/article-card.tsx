@@ -13,16 +13,8 @@ interface ArticleCardProps {
 }
 
 export function ArticleCard({ post, featured = false }: ArticleCardProps) {
-  console.log('📄 ArticleCard rendering:', {
-    title: post?.title,
-    excerpt: post?.excerpt,
-    excerpt_type: typeof post?.excerpt,
-    excerpt_length: post?.excerpt?.length || 0,
-    has_html: post?.excerpt?.includes('<') || false
-  })
   
   if (!post) {
-    console.error('⚠️ ArticleCard: post is null/undefined')
     return null
   }
   
@@ -40,12 +32,6 @@ export function ArticleCard({ post, featured = false }: ArticleCardProps) {
   // excerptを安全に処理 - HTMLタグを除去してから省略
   const cleanExcerpt = excerpt ? stripHtml(truncateText(excerpt, 150)) : ''
   
-  console.log('🧩 ArticleCard excerpt processing:', {
-    original: excerpt,
-    cleaned: cleanExcerpt,
-    length_before: excerpt?.length || 0,
-    length_after: cleanExcerpt?.length || 0
-  })
 
   return (
     <Link href={`/blog/${slug}`}>

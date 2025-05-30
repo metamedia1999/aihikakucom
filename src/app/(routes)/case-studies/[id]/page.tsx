@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { MOCK_IMAGES } from '@/lib/constants'
 
@@ -59,7 +60,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         {/* ヘッダー */}
         <div className="mb-8">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-            <a href="/" className="hover:text-foreground">ホーム</a>
+            <Link href="/" className="hover:text-foreground">ホーム</Link>
             <span>/</span>
             <span>導入事例</span>
             <span>/</span>

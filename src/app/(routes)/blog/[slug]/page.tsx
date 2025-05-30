@@ -11,19 +11,40 @@ import { CalendarIcon } from 'lucide-react'
 // 10分間隔でページを再生成
 export const revalidate = 600
 
+// 静的パラメータの生成（画像ファイルを除外）
+export async function generateStaticParams() {
+  // 実際のプロジェクトでは getAllPosts() などの関数を使用
+  // 現在はブログポストのスラッグを手動で定義
+  const blogSlugs = [
+    'ai-kakushin-jidai',
+    'dx-senryaku-guide',
+    'cloud-migration-best-practices',
+    'security-compliance-2024'
+  ];
+  
+  // 画像ファイルを明示的に除外
+  return blogSlugs
+    .filter(slug => !slug.match(/\.(jpg|png|gif|jpeg)$/i))
+    .map(slug => ({
+      slug: slug,
+    }));
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug: encodedSlug } = await params
   const slug = decodeURIComponent(encodedSlug)
   
-  console.log('🔍 generateMetadata called for blog post:', {
-    originalSlug: encodedSlug,
-    decodedSlug: slug
-  })
+  // 画像ファイル拡張子を即座に除外
+  if (slug.match(/\.(jpg|png|gif|jpeg)$/i)) {
+    return {
+      title: 'ページが見つかりません',
+      description: '要求されたページは存在しません。'
+    };
+  }
   
   try {
     const post = await getPostData(slug)
     
-    console.log('✅ Blog post metadata generated successfully for:', post.title)
     
     return {
       title: post.title,
@@ -59,13 +80,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const { slug: encodedSlug } = await params
   const slug = decodeURIComponent(encodedSlug)
   
-  console.log('📄 BlogPostPage rendering for slug:', {
-    originalSlug: encodedSlug,
-    decodedSlug: slug
-  })
+  // 画像ファイル拡張子を即座に除外
+  if (slug.endsWith('.jpg') || 
+      slug.endsWith('.png') || 
+      slug.endsWith('.gif') ||
+      slug.endsWith('.jpeg')) {
+    notFound(); // 404ページにリダイレクト
+  }
   
   try {
-    console.log('🔄 Fetching post data...')
     const post = await getPostData(slug)
 
     if (!post) {
@@ -76,21 +99,15 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       notFound()
     }
     
-    console.log('✅ Post data fetched successfully:', {
-      title: post.title,
-      contentLength: post.content?.length || 0,
-      hasImage: !!post.featuredImage?.node?.sourceUrl,
-      categoriesCount: post.categories?.nodes?.length || 0
-    })
 
     const { title, content, date, featuredImage, categories } = post
     const imageUrl = featuredImage?.node?.sourceUrl || DEFAULT_FEATURED_IMAGE
 
     return (
-      <article className="container-wide py-12">
+      <article className="container-wide" style={{ paddingTop: '8px !important', paddingBottom: '8px !important' }}>
         <div className="max-w-3xl mx-auto">
           {/* 記事ヘッダー */}
-          <div className="mb-8">
+          <div className="mb-2" style={{ marginBottom: '8px !important' }}>
             <div className="flex items-center text-sm text-muted-foreground mb-4">
               <CalendarIcon className="h-4 w-4 mr-2" />
               <time dateTime={date}>{formatDate(date)}</time>
@@ -109,11 +126,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               )}
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-bold mb-6">{title}</h1>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2" style={{ marginBottom: '8px !important' }}>{title}</h1>
           </div>
 
           {/* アイキャッチ画像 */}
-          <div className="relative aspect-video w-full mb-10 overflow-hidden rounded-lg">
+          <div className="relative aspect-video w-full mb-3 overflow-hidden rounded-lg" style={{ marginBottom: '12px !important' }}>
             <Image
               src={imageUrl}
               alt={title}
@@ -131,7 +148,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           />
 
           {/* 記事フッター */}
-          <div className="mt-12 pt-6 border-t">
+          <div className="mt-6 pt-3 border-t" style={{ marginTop: '24px !important', paddingTop: '12px !important' }}>
             <div className="flex justify-between">
               <Link href="/blog" className="text-primary hover:underline">
                 ← 記事一覧に戻る

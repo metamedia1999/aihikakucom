@@ -6,7 +6,7 @@ interface IndustriesSectionProps {
   solutions?: any[]
 }
 
-export function IndustriesSection({ solutions = [] }: IndustriesSectionProps) {
+export default function IndustriesSection({ solutions = [] }: IndustriesSectionProps) {
   // フォールバック用のモック業界データ（サービス数付き）
   const defaultIndustries = [
     { id: 'industry-1', name: '金融', slug: 'finance', image: MOCK_IMAGES.industry1, serviceCount: 0 },
@@ -47,6 +47,7 @@ export function IndustriesSection({ solutions = [] }: IndustriesSectionProps) {
                   alt={industry.name || '業界ソリューション画像'}
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 />
                 <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center">
                   <h3 className="text-white text-xl font-bold mb-2">{industry.name}</h3>

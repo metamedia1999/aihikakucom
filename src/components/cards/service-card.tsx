@@ -10,7 +10,6 @@ interface ServiceCardProps {
 }
 
 export function ServiceCard({ service, featured = false }: ServiceCardProps) {
-  console.log('ServiceCard rendering:', { title: service?.title, excerpt: service?.excerpt })
   
   const {
     slug,

@@ -16,19 +16,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug: encodedSlug } = await params
   const slug = decodeURIComponent(encodedSlug)
   
-  console.log('🔍 generateMetadata called for service:', {
-    originalSlug: encodedSlug,
-    decodedSlug: slug
-  })
   
   try {
     const service = await getServiceData(slug)
     
-    console.log('✅ Service metadata generated successfully:', {
-      title: service.title,
-      hasExcerpt: !!service.excerpt,
-      hasImage: !!service.featuredImage?.node?.sourceUrl
-    })
 
     return {
       title: service.title,
@@ -42,11 +33,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       },
     }
   } catch (error) {
-    console.error('❌ Service metadata generation failed:', {
-      originalSlug: encodedSlug,
-      decodedSlug: slug,
-      error: error instanceof Error ? error.message : error
-    })
     
     return {
       title: 'サービスが見つかりません',
@@ -84,31 +70,14 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
   const { slug: encodedSlug } = await params
   const slug = decodeURIComponent(encodedSlug)
   
-  console.log('📋 ServicePage rendering for slug:', {
-    originalSlug: encodedSlug,
-    decodedSlug: slug
-  })
   
   try {
-    console.log('🔄 Fetching service data...')
     const service = await getServiceData(slug)
     
     if (!service) {
-      console.error('❌ Service not found for slug:', {
-        originalSlug: encodedSlug,
-        decodedSlug: slug
-      })
       notFound()
     }
     
-    console.log('✅ Service data fetched successfully:', {
-      title: service.title,
-      hasContent: !!service.content,
-      hasServiceDetail: !!service.serviceDetail,
-      hasServiceFields: !!service.serviceFields,
-      industriesCount: service.industries?.nodes?.length || 0,
-      hasImage: !!service.featuredImage?.node?.sourceUrl
-    })
     
     const {
       title,
@@ -122,15 +91,9 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
     // Handle both new and legacy field structures with debugging
     const fields = serviceDetail || serviceFields
     
-    console.log('🔧 Service fields structure:', {
-      serviceDetail: serviceDetail ? Object.keys(serviceDetail) : null,
-      serviceFields: serviceFields ? Object.keys(serviceFields) : null,
-      finalFields: fields ? Object.keys(fields) : null
-    })
     
     const logoUrl = getServiceImage(service)
     
-    console.log('🇿 Logo URL resolved:', logoUrl)
 
     // Schema.org用のJSONデータ（実際はYoast SEOで生成されるべき）
     const schemaData = {
@@ -147,10 +110,10 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
     }
 
     return (
-      <div className="container-wide py-12">
+      <div className="container-wide" style={{ paddingTop: '8px !important', paddingBottom: '8px !important' }}>
         <div className="bg-white border rounded-lg overflow-hidden">
           {/* ヘッダー部分 */}
-          <div className="p-6 md:p-8 border-b">
+          <div className="p-3 md:p-4 border-b" style={{ padding: '12px !important' }}>
             <div className="flex items-center">
               <div className="relative h-20 w-20 mr-6 shrink-0 overflow-hidden rounded bg-secondary">
                 <ImageWithFallback
@@ -181,8 +144,8 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
           {/* コンテンツ */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 lg:gap-6">
             {/* メインコンテンツ */}
-            <div className="lg:col-span-2 p-6 md:p-8">
-              <div className="relative aspect-video w-full mb-8 overflow-hidden rounded">
+            <div className="lg:col-span-2 p-3 md:p-4" style={{ padding: '12px !important' }}>
+              <div className="relative aspect-video w-full mb-3 overflow-hidden rounded" style={{ marginBottom: '12px !important' }}>
                 <ImageWithFallback
                   src={featuredImage?.node?.sourceUrl || getServiceImage(service)}
                   alt={title}
@@ -227,7 +190,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             </div>
 
             {/* サイドバー */}
-            <div className="lg:col-span-1 p-6 md:p-8 bg-secondary/30 lg:border-l">
+            <div className="lg:col-span-1 p-3 md:p-4 bg-secondary/30 lg:border-l" style={{ padding: '12px !important' }}>
               <div className="sticky top-24 space-y-6">
                 {/* サービス概要 */}
                 <div>
@@ -362,21 +325,6 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
       </div>
     )
   } catch (error) {
-    console.error('❌ Failed to load service page:', {
-      originalSlug: encodedSlug,
-      decodedSlug: slug,
-      error: error instanceof Error ? {
-        name: error.name,
-        message: error.message,
-        stack: error.stack
-      } : error,
-      timestamp: new Date().toISOString()
-    })
-    
-    // GraphQLエラーの詳細情報を表示
-    if (error && typeof error === 'object' && 'response' in error) {
-      console.error('🚑 GraphQL Response Error:', error.response)
-    }
     
     return (
       <div className="container-wide py-12">

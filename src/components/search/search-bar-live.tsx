@@ -54,7 +54,7 @@ export function SearchBarLive() {
         // サービスと記事を結合して最大5件まで表示
         setSuggestions([...results.services, ...results.posts].slice(0, 5))
       } catch (error) {
-        console.error('Search suggestion failed:', error)
+        // エラーが発生してもユーザーには表示しない
       } finally {
         setLoading(false)
       }

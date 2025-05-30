@@ -73,7 +73,6 @@ export default function ContactPage() {
         throw new Error(result.message || 'フォームの送信に失敗しました')
       }
 
-      console.log('Contact form submitted successfully:', result)
       setIsSuccess(true)
       form.reset()
     } catch (error) {
